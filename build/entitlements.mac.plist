@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <!-- Required for Electron / Chromium JIT -->
+  <key>com.apple.security.cs.allow-jit</key>
+  <true/>
+
+  <!-- Required for Electron's unsigned executable memory -->
+  <key>com.apple.security.cs.allow-unsigned-executable-memory</key>
+  <true/>
+
+  <!-- Required for Electron's dynamic library loading (Chromium) -->
+  <key>com.apple.security.cs.disable-library-validation</key>
+  <true/>
+
+  <!-- Allows DYLD env vars Electron needs at startup -->
+  <key>com.apple.security.cs.allow-dyld-environment-variables</key>
+  <true/>
+
+  <!--
+    NOTE: This app intentionally does NOT use App Sandbox
+    (com.apple.security.app-sandbox) because it requires:
+      - osascript administrator privileges for MAC address changes
+      - execFile access to ifconfig / system network interfaces
+    These operations are incompatible with the MAS sandbox.
+    Distribution is via Developer ID + Notarization (Gatekeeper-compliant).
+  -->
+</dict>
+</plist>

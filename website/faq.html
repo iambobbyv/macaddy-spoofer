@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FAQ — MAC Addy Spoofer</title>
+  <meta name="description" content="Frequently asked questions and troubleshooting guide for MAC Addy Spoofer." />
+  <link rel="canonical" href="https://macaddy.souriapps.net/faq" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="https://macaddy.souriapps.net" class="site-logo">
+        <div class="logo-mark">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <span class="logo-name">MAC Addy <span>Spoofer</span></span>
+      </a>
+      <nav class="site-nav">
+        <a href="support.html">Support</a>
+        <a href="faq.html" class="active">FAQ</a>
+        <a href="feedback.html">Feedback</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+
+    <section class="hero hero-sm">
+      <div class="container" style="max-width:var(--max-w);margin:0 auto;text-align:center;">
+        <div class="hero-badge">Documentation</div>
+        <h1 class="hero-title">Frequently Asked <span class="grad">Questions</span></h1>
+        <p class="hero-subtitle">
+          Everything you need to know about MAC Addy Spoofer — from getting started to advanced configurations.
+        </p>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:16px;">
+      <div class="container page-wrap-wide" style="padding-bottom:0;">
+        <div class="faq-layout">
+
+          <!-- Sidebar TOC -->
+          <aside class="faq-toc">
+            <p class="toc-label">Jump to</p>
+            <ul>
+              <li><a href="#getting-started">Getting Started</a></li>
+              <li><a href="#mac-changes">MAC Address Changes</a></li>
+              <li><a href="#permissions">Permissions &amp; Security</a></li>
+              <li><a href="#features">Features</a></li>
+              <li><a href="#automation">Automation</a></li>
+              <li><a href="#troubleshooting">Troubleshooting</a></li>
+              <li><a href="#purchases">Purchases &amp; Licensing</a></li>
+            </ul>
+          </aside>
+
+          <!-- FAQ Content -->
+          <div>
+
+            <!-- Getting Started -->
+            <div class="faq-group" id="getting-started">
+              <div class="faq-group-title">Getting Started</div>
+
+              <details class="faq-item" id="installation">
+                <summary>How do I install MAC Addy Spoofer?</summary>
+                <div class="faq-body">
+                  <p>Download MAC Addy Spoofer from the Mac App Store or the official site. Once downloaded:</p>
+                  <ol>
+                    <li>Open the <code>.dmg</code> file and drag MAC Addy Spoofer to your Applications folder.</li>
+                    <li>Launch the app — macOS may show a Gatekeeper security dialog on first launch.</li>
+                    <li>Right-click the app icon and choose <strong>Open</strong> to bypass the initial warning.</li>
+                    <li>On first use, the app will prompt for administrator credentials when applying MAC changes.</li>
+                  </ol>
+                </div>
+              </details>
+
+              <details class="faq-item" id="first-launch">
+                <summary>The app won't open on first launch — "unidentified developer" warning</summary>
+                <div class="faq-body">
+                  <p>macOS Gatekeeper may show a warning for newly downloaded apps. To open MAC Addy Spoofer:</p>
+                  <ol>
+                    <li>Right-click (or Control+click) the app in Finder.</li>
+                    <li>Select <strong>Open</strong> from the context menu.</li>
+                    <li>Click <strong>Open</strong> in the security dialog that appears.</li>
+                  </ol>
+                  <p>Alternatively, go to <strong>System Settings → Privacy &amp; Security</strong> and click <strong>Open Anyway</strong>. You'll only need to do this once.</p>
+                </div>
+              </details>
+
+              <details class="faq-item" id="interfaces">
+                <summary>How do I set up my network interfaces?</summary>
+                <div class="faq-body">
+                  <p>MAC Addy Spoofer uses macOS interface IDs (like <code>en0</code>, <code>en1</code>) to identify your network adapters. The defaults are:</p>
+                  <ul>
+                    <li><strong>Wi-Fi:</strong> <code>en0</code> (most common on MacBook)</li>
+                    <li><strong>Ethernet:</strong> <code>en1</code> or <code>en2</code></li>
+                    <li><strong>Bluetooth:</strong> <code>en2</code> or <code>en3</code></li>
+                  </ul>
+                  <p>To find your exact interface IDs, open Terminal and run:</p>
+                  <pre><code>ifconfig -l</code></pre>
+                  <p>Then update the values in <strong>Settings → Interface Mapping</strong> to match your Mac.</p>
+                </div>
+              </details>
+
+              <details class="faq-item">
+                <summary>What macOS versions are supported?</summary>
+                <div class="faq-body">
+                  <p>MAC Addy Spoofer requires <strong>macOS 12 Monterey or later</strong>. It is optimized for macOS 13 Ventura, 14 Sonoma, and 15 Sequoia, and supports both Apple Silicon (M-series) and Intel Macs.</p>
+                </div>
+              </details>
+
+            </div>
+
+            <!-- MAC Address Changes -->
+            <div class="faq-group" id="mac-changes">
+              <div class="faq-group-title">MAC Address Changes</div>
+
+              <details class="faq-item" id="apply-fail">
+                <summary>Why does "Apply MAC" fail or show an error?</summary>
+                <div class="faq-body">
+                  <p>MAC address changes require root/administrator privileges. Common reasons for failure:</p>
+                  <ul>
+                    <li><strong>Incorrect interface name:</strong> Verify the interface ID in <strong>Settings → Interface Mapping</strong> matches your actual adapter (use <code>ifconfig -l</code> in Terminal).</li>
+                    <li><strong>Admin password rejected:</strong> Ensure you're entering the correct administrator password for your Mac account.</li>
+                    <li><strong>Interface is down:</strong> The selected interface must be active/up for the change to apply.</li>
+                    <li><strong>Script permission:</strong> The internal helper script may need execute permissions. Contact support if this persists.</li>
+                  </ul>
+                </div>
+              </details>
+
+              <details class="faq-item" id="persist">
+                <summary>Do MAC address changes persist after rebooting?</summary>
+                <div class="faq-body">
+                  <p><strong>No.</strong> On macOS, MAC address changes made via <code>ifconfig</code> are temporary and revert to the hardware-burned-in address on reboot. This is a fundamental macOS behavior — the original MAC is stored in firmware and cannot be permanently changed via software.</p>
+                  <p>This is actually a privacy feature: if you ever forget to restore your MAC, a reboot automatically returns you to your original address.</p>
+                  <p>To re-apply after reboot, use the Automation tab to set a timer, or simply re-apply manually when you launch the app.</p>
+                </div>
+              </details>
+
+              <details class="faq-item" id="detect-mac">
+                <summary>The app shows "Loading…" or doesn't detect my MAC address</summary>
+                <div class="faq-body">
+                  <p>This usually means the interface name configured in the app doesn't match your Mac's actual interface IDs. To fix:</p>
+                  <ol>
+                    <li>Open Terminal and run <code>ifconfig -l</code> to list all interfaces.</li>
+                    <li>Identify which interface corresponds to Wi-Fi (usually <code>en0</code>), Ethernet, or Bluetooth.</li>
+                    <li>Go to <strong>Settings</strong> in MAC Addy Spoofer and update the interface names accordingly.</li>
+                  </ol>
+                </div>
+              </details>
+
+              <details class="faq-item" id="restore">
+                <summary>How do I restore my original MAC address?</summary>
+                <div class="faq-body">
+                  <p>There are several ways to restore your original MAC address:</p>
+                  <ul>
+                    <li><strong>In-app:</strong> Click <strong>Restore</strong> on the Dashboard, or <strong>Restore Original</strong> in the MAC Configuration card.</li>
+                    <li><strong>Reboot:</strong> Simply restart your Mac — macOS automatically reverts to the hardware MAC address on boot.</li>
+                    <li><strong>Randomize All → Restore All:</strong> Use the Quick Actions panel to restore all interfaces at once.</li>
+                  </ul>
+                </div>
+              </details>
+
+            </div>
+
+            <!-- Permissions & Security -->
+            <div class="faq-group" id="permissions">
+              <div class="faq-group-title">Permissions &amp; Security</div>
+
+              <details class="faq-item" id="sudo">
+                <summary>How do I set up administrator/sudo access?</summary>
+                <div class="faq-body">
+                  <p>MAC Addy Spoofer requests your macOS administrator password each time it applies a MAC change. This is the same password you use to install software on your Mac.</p>
+                  <p>For advanced users who want passwordless operation (not recommended for shared Macs), you can add a sudoers entry:</p>
+                  <pre><code>sudo visudo -f /etc/sudoers.d/macaddy</code></pre>
+                  <p>Add the following line (replace <code>username</code> with your account name):</p>
+                  <pre><code>username ALL=(root) NOPASSWD: /usr/sbin/ifconfig</code></pre>
+                  <p><strong>Note:</strong> Only do this on a Mac you fully control, and understand the security implications of passwordless sudo.</p>
+                </div>
+              </details>
+
+              <details class="faq-item" id="gatekeeper">
+                <summary>macOS shows a Gatekeeper or security warning</summary>
+                <div class="faq-body">
+                  <p>This is normal for apps downloaded outside the Mac App Store. MAC Addy Spoofer is code-signed with a Developer ID and notarized by Apple, so it is safe to run.</p>
+                  <p>To allow it: <strong>System Settings → Privacy &amp; Security → Open Anyway</strong>. You only need to do this once.</p>
+                </div>
+              </details>
+
+              <details class="faq-item">
+                <summary>Is MAC spoofing legal?</summary>
+                <div class="faq-body">
+                  <p>MAC address spoofing is legal in most jurisdictions when used on networks you own or are authorized to use. Common legitimate use cases include:</p>
+                  <ul>
+                    <li>Enhancing privacy on public Wi-Fi networks</li>
+                    <li>Network testing and development</li>
+                    <li>Bypassing MAC-based access restrictions on your own network</li>
+                    <li>Testing network security on authorized systems</li>
+                  </ul>
+                  <p><strong>Do not</strong> use MAC spoofing to impersonate other devices, bypass security controls you're not authorized to bypass, or for any fraudulent purpose. Always comply with your organization's policies and applicable laws.</p>
+                </div>
+              </details>
+
+            </div>
+
+            <!-- Features -->
+            <div class="faq-group" id="features">
+              <div class="faq-group-title">Features</div>
+
+              <details class="faq-item" id="vendors">
+                <summary>What are vendor presets and how do I use them?</summary>
+                <div class="faq-body">
+                  <p>Vendor presets generate MAC addresses that match the Organizationally Unique Identifier (OUI) of a specific manufacturer. This makes your device appear to be from that brand on the network.</p>
+                  <p>Available presets: <strong>Apple, Intel, Cisco, Dell, HP, Samsung, VMware</strong>, and <strong>Random</strong> (fully random OUI).</p>
+                  <p>Click a vendor chip in the MAC Configuration card, then click <strong>Generate</strong> to create a valid MAC address for that vendor, and <strong>Apply MAC</strong> to set it.</p>
+                </div>
+              </details>
+
+              <details class="faq-item" id="clone">
+                <summary>How do I clone a MAC address from another device?</summary>
+                <div class="faq-body">
+                  <p>Use the <strong>Clone MAC</strong> quick action on the Dashboard:</p>
+                  <ol>
+                    <li>Click <strong>Clone MAC</strong> in the Quick Actions panel.</li>
+                    <li>Enter the target MAC address in the format <code>00:1A:2B:3C:4D:5E</code>.</li>
+                    <li>Click <strong>Clone</strong> to populate the MAC field.</li>
+                    <li>Click <strong>Apply MAC</strong> to apply it to the OS.</li>
+                  </ol>
+                </div>
+              </details>
+
+              <details class="faq-item" id="randomize-all">
+                <summary>How do I randomize all interfaces at once?</summary>
+                <div class="faq-body">
+                  <p>Click <strong>Randomize All Interfaces</strong> in the Quick Actions panel (or use <strong>Cmd+Shift+G</strong> from the menu bar). This generates and applies a random MAC address to every configured interface simultaneously.</p>
+                  <p>Each interface gets its own unique random MAC. You can also restore all interfaces at once with <strong>Restore All Original</strong>.</p>
+                </div>
+              </details>
+
+              <details class="faq-item">
+                <summary>Can I save and load my MAC configuration?</summary>
+                <div class="faq-body">
+                  <p>Yes. Use <strong>File → Save Configuration</strong> (or <strong>Cmd+S</strong>) to export your current settings — including vendor preferences, interface mappings, and behavior settings — to a JSON file.</p>
+                  <p>Use <strong>File → Load Configuration</strong> (or <strong>Cmd+O</strong>) to restore a saved configuration. This is useful for switching between different network profiles.</p>
+                </div>
+              </details>
+
+            </div>
+
+            <!-- Automation -->
+            <div class="faq-group" id="automation">
+              <div class="faq-group-title">Automation</div>
+
+              <details class="faq-item">
+                <summary>How does the auto-randomization timer work?</summary>
+                <div class="faq-body">
+                  <p>The Automation tab lets you schedule automatic MAC address randomization at a fixed interval. To set it up:</p>
+                  <ol>
+                    <li>Go to the <strong>Automation</strong> tab.</li>
+                    <li>Set the interval (e.g., 30 minutes, 1 hour) and select which interfaces to include.</li>
+                    <li>Click <strong>Start Timer</strong>. The countdown ring shows time until the next change.</li>
+                  </ol>
+                  <p>The timer runs while the app is open. Each auto-change is logged to the History tab.</p>
+                </div>
+              </details>
+
+              <details class="faq-item">
+                <summary>Will the timer keep running when I minimize the app?</summary>
+                <div class="faq-body">
+                  <p>Yes — the timer continues running as long as MAC Addy Spoofer is open, even if it's minimized or in the background. However, the timer <strong>pauses</strong> if you quit the application and does not persist across sessions.</p>
+                </div>
+              </details>
+
+            </div>
+
+            <!-- Troubleshooting -->
+            <div class="faq-group" id="troubleshooting">
+              <div class="faq-group-title">Troubleshooting</div>
+
+              <details class="faq-item" id="wifi-disconnect">
+                <summary>My Wi-Fi disconnects when I apply a MAC change</summary>
+                <div class="faq-body">
+                  <p>This is expected behavior. Changing the MAC address requires the interface to briefly go down and come back up, which disconnects your Wi-Fi. The connection re-establishes automatically within a few seconds in most cases.</p>
+                  <p>Your router will see the new MAC address and may assign a new DHCP lease (new IP address). Some networks with MAC filtering may require you to authorize the new address.</p>
+                </div>
+              </details>
+
+              <details class="faq-item" id="bluetooth">
+                <summary>Bluetooth interface issues or unavailable</summary>
+                <div class="faq-body">
+                  <p>Bluetooth on macOS uses a different hardware stack than Wi-Fi and Ethernet. MAC address spoofing for Bluetooth via <code>ifconfig</code> may not work on all Macs or all macOS versions — Apple has progressively restricted Bluetooth interface access.</p>
+                  <p>If the Bluetooth interface shows as unavailable, this is a macOS limitation. Wi-Fi and Ethernet interfaces are fully supported.</p>
+                </div>
+              </details>
+
+              <details class="faq-item">
+                <summary>The change history isn't saving between sessions</summary>
+                <div class="faq-body">
+                  <p>MAC Addy Spoofer stores history in localStorage within the app's Electron context. If you're not seeing history persist, try:</p>
+                  <ol>
+                    <li>Go to <strong>File → Save Configuration</strong> to save your current state.</li>
+                    <li>Check that you haven't cleared app data or reset preferences.</li>
+                    <li>Use <strong>File → Export History as CSV</strong> to back up your history to a file.</li>
+                  </ol>
+                </div>
+              </details>
+
+              <details class="faq-item">
+                <summary>The app crashes or becomes unresponsive</summary>
+                <div class="faq-body">
+                  <p>If MAC Addy Spoofer crashes or freezes:</p>
+                  <ol>
+                    <li>Force-quit the app (<strong>Cmd+Option+Esc</strong>) and relaunch it.</li>
+                    <li>Check Console.app for error logs related to MAC Addy Spoofer.</li>
+                    <li>Try resetting settings: go to <strong>Settings → Reset to Defaults</strong>.</li>
+                    <li>If the issue persists, email <a href="mailto:support@souriapps.net">support@souriapps.net</a> with a description of what you were doing and your macOS version.</li>
+                  </ol>
+                </div>
+              </details>
+
+            </div>
+
+            <!-- Purchases & Licensing -->
+            <div class="faq-group" id="purchases">
+              <div class="faq-group-title">Purchases &amp; Licensing</div>
+
+              <details class="faq-item">
+                <summary>How do I restore a previous purchase?</summary>
+                <div class="faq-body">
+                  <p>If you've purchased MAC Addy Spoofer and need to restore it on a new Mac or after reinstalling:</p>
+                  <ol>
+                    <li>Open MAC Addy Spoofer.</li>
+                    <li>Sign in with the same Apple ID used for the original purchase.</li>
+                    <li>Your purchase should be recognized automatically through the App Store.</li>
+                  </ol>
+                  <p>If purchase restoration doesn't work, contact Apple Support at <a href="https://reportaproblem.apple.com" target="_blank" rel="noopener">reportaproblem.apple.com</a>, as all purchases are managed by Apple.</p>
+                </div>
+              </details>
+
+              <details class="faq-item">
+                <summary>Can I use MAC Addy Spoofer on multiple Macs?</summary>
+                <div class="faq-body">
+                  <p>Yes. Your purchase through the Mac App Store allows you to install and use MAC Addy Spoofer on all Macs that share the same Apple ID, in accordance with Apple's standard App Store terms.</p>
+                </div>
+              </details>
+
+              <details class="faq-item">
+                <summary>How do I request a refund?</summary>
+                <div class="faq-body">
+                  <p>All purchases are processed through the Mac App Store and refunds are handled by Apple. To request a refund:</p>
+                  <ol>
+                    <li>Visit <a href="https://reportaproblem.apple.com" target="_blank" rel="noopener">reportaproblem.apple.com</a>.</li>
+                    <li>Sign in with your Apple ID.</li>
+                    <li>Find MAC Addy Spoofer and select <strong>Request a Refund</strong>.</li>
+                  </ol>
+                </div>
+              </details>
+
+            </div>
+
+            <!-- Still need help? -->
+            <div class="info-banner" style="margin-bottom:40px;">
+              <div class="info-banner-icon">💬</div>
+              <div>
+                <strong>Still have a question?</strong>
+                Can't find the answer you're looking for? Email us at
+                <a href="mailto:support@souriapps.net">support@souriapps.net</a> — we're happy to help.
+                You can also <a href="feedback.html">submit feedback</a> or a feature request.
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <div class="footer-logo-mark">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        MAC Addy Spoofer
+      </div>
+      <div class="footer-links">
+        <a href="support.html">Support</a>
+        <a href="feedback.html">Feedback</a>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Service</a>
+        <a href="https://souriapps.net">SouriApps</a>
+      </div>
+      <p class="footer-copy">© 2026 Souriya Bobby Vongchanh (SouriApps). All rights reserved.</p>
+      <p class="footer-built">Built with care by Souriya Bobby Vongchanh</p>
+    </div>
+  </footer>
+
+</body>
+</html>

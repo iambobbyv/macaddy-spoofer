@@ -1,0 +1,15 @@
+{
+  "originHash" : "1edfaf88e0aba1e1b86feaabf1c1b6e82c5baf264491d75a342a6dd30814dfef",
+  "pins" : [
+    {
+      "identity" : "capacitor-swift-pm",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ionic-team/capacitor-swift-pm.git",
+      "state" : {
+        "revision" : "1f324fe7bdbdc8c5cc28bea48a231545a8c2e823",
+        "version" : "8.1.0"
+      }
+    }
+  ],
+  "version" : 3
+}

@@ -1,0 +1,29 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "MAC Addy Spoofer (Electron)",
+      "runtimeExecutable": "/Users/bobbyv/Projects/macaddy-spoofer/node_modules/electron/dist/Electron.app/Contents/MacOS/Electron",
+      "runtimeArgs": ["."],
+      "port": 0
+    },
+    {
+      "name": "MAC Addy Spoofer (Electron Dev)",
+      "runtimeExecutable": "/Users/bobbyv/Projects/macaddy-spoofer/node_modules/electron/dist/Electron.app/Contents/MacOS/Electron",
+      "runtimeArgs": ["."],
+      "port": 0
+    },
+    {
+      "name": "iOS – Sync + Open Xcode",
+      "runtimeExecutable": "/Users/bobbyv/.nvm/versions/node/v24.14.0/bin/npm",
+      "runtimeArgs": ["run", "ios"],
+      "port": 0
+    },
+    {
+      "name": "Build macOS Universal DMG",
+      "runtimeExecutable": "/Users/bobbyv/.nvm/versions/node/v24.14.0/bin/npm",
+      "runtimeArgs": ["run", "build:mac:universal"],
+      "port": 0
+    }
+  ]
+}

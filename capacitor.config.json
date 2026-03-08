@@ -1,0 +1,17 @@
+{
+  "appId": "com.bobbyv.macaddyspoofer",
+  "appName": "MAC Addy Spoofer",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  },
+  "plugins": {
+    "StatusBar": {
+      "style": "Dark",
+      "backgroundColor": "#070b14"
+    },
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
+  }
+}

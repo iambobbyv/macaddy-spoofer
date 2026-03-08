@@ -1,0 +1,131 @@
+{
+  "name": "macaddy-spoofer",
+  "version": "1.0.0",
+  "description": "Professional MAC Address Spoofer with automated randomization",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "start:dev": "NODE_ENV=development electron .",
+    "build": "electron-builder",
+    "build:mac": "electron-builder --mac",
+    "build:mac:arm64": "electron-builder --mac --arm64",
+    "build:mac:x64": "electron-builder --mac --x64",
+    "build:mac:universal": "electron-builder --mac --universal",
+    "dist": "electron-builder --mac dmg",
+    "cap:sync": "npx cap sync",
+    "cap:sync:ios": "npx cap sync ios",
+    "cap:open:ios": "npx cap open ios",
+    "ios": "npx cap sync ios && npx cap open ios"
+  },
+  "keywords": [
+    "mac",
+    "spoofer",
+    "network",
+    "privacy",
+    "security"
+  ],
+  "author": {
+    "name": "Souriya \"Bobby\" Vongchanh",
+    "email": "iambobbyv@icloud.com"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@capacitor/cli": "^8.1.0",
+    "@capacitor/clipboard": "^8.0.1",
+    "@capacitor/core": "^8.1.0",
+    "@capacitor/ios": "^8.1.0",
+    "@capacitor/network": "^8.0.1",
+    "@electron/notarize": "^3.1.1",
+    "dotenv": "^16.0.0",
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.0"
+  },
+  "build": {
+    "appId": "com.bobbyv.macaddy-spoofer",
+    "productName": "MAC Addy Spoofer",
+    "copyright": "Copyright \u00a9 2026 Souriya \"Bobby\" Vongchanh. All rights reserved.",
+    "asar": true,
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "index.html",
+      "scripts/**",
+      "assets/**",
+      "!**/.DS_Store",
+      "!dist/**",
+      "!build/**",
+      "!*.md",
+      "!*.sh"
+    ],
+    "afterSign": "scripts/notarize.js",
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "arm64",
+            "x64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "arm64",
+            "x64"
+          ]
+        }
+      ],
+      "icon": "assets/icon.png",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.inherit.plist",
+      "category": "public.app-category.utilities",
+      "minimumSystemVersion": "12.0",
+      "darkModeSupport": true,
+      "extendInfo": {
+        "NSHumanReadableCopyright": "Copyright \u00a9 2026 Souriya \"Bobby\" Vongchanh. All rights reserved.",
+        "CFBundleShortVersionString": "1.0.0",
+        "CFBundleVersion": "1",
+        "LSMinimumSystemVersion": "12.0",
+        "NSAppleEventsUsageDescription": "MAC Addy Spoofer uses Apple Events to request administrator privileges when changing MAC addresses.",
+        "NSAdminRequired": true
+      }
+    },
+    "dmg": {
+      "title": "MAC Addy Spoofer",
+      "icon": "assets/icon.png",
+      "iconSize": 80,
+      "sign": false,
+      "contents": [
+        {
+          "x": 130,
+          "y": 210,
+          "type": "file"
+        },
+        {
+          "x": 410,
+          "y": 210,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ],
+      "window": {
+        "width": 560,
+        "height": 380
+      },
+      "background": null
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "icon": "assets/icon.png",
+      "category": "Network"
+    }
+  }
+}

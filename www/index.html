@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>MAC Addy Spoofer</title>
+  <style>
+    :root {
+      --bg:       #070b14;
+      --bg2:      #0b1120;
+      --surface:  rgba(12,18,36,0.92);
+      --surface2: rgba(18,26,50,0.7);
+      --border:   rgba(80,130,210,0.12);
+      --border-h: rgba(0,210,255,0.25);
+      --text:     #dce8f8;
+      --text-sec: rgba(170,195,230,0.65);
+      --text-dim: rgba(130,160,200,0.38);
+      --accent:   #00d2ff;
+      --accent-d: rgba(0,210,255,0.13);
+      --purple:   #8b5cf6;
+      --purple-d: rgba(139,92,246,0.13);
+      --ok:       #22d3a5;
+      --ok-d:     rgba(34,211,165,0.13);
+      --err:      #f04f5a;
+      --err-d:    rgba(240,79,90,0.13);
+      --warn:     #f59e0b;
+      --warn-d:   rgba(245,158,11,0.13);
+      --r1:6px; --r2:12px; --r3:16px; --r4:20px; --rf:9999px;
+      --ease: cubic-bezier(.16,1,.3,1);
+      --font: -apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",system-ui,sans-serif;
+      --mono: "SF Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bot: env(safe-area-inset-bottom, 0px);
+      --tabbar-h: calc(60px + var(--safe-bot));
+    }
+    *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+    html,body { height:100%; overflow:hidden; background:var(--bg); }
+    body {
+      font-family:var(--font); font-size:14px; line-height:1.5;
+      color:var(--text); -webkit-font-smoothing:antialiased;
+    }
+    body::before {
+      content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+      background:
+        radial-gradient(ellipse 70% 50% at 20% 0%,rgba(0,100,220,.1) 0%,transparent 55%),
+        radial-gradient(ellipse 50% 50% at 80% 100%,rgba(120,50,210,.08) 0%,transparent 55%);
+    }
+
+    /* ── SHELL ── */
+    .app { display:flex; flex-direction:column; height:100%; position:relative; z-index:1; }
+
+    /* ── TAB VIEWS ── */
+    .tab-view {
+      display:none; flex:1; overflow-y:auto; overflow-x:hidden;
+      padding-top:calc(var(--safe-top) + 16px);
+      padding-bottom:calc(var(--tabbar-h) + 8px);
+      padding-left:16px; padding-right:16px;
+    }
+    .tab-view::-webkit-scrollbar { display:none; }
+    .tab-view.active { display:block; animation:vfade 220ms var(--ease); }
+    @keyframes vfade { from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:none;} }
+
+    /* ── PAGE HEADER ── */
+    .page-hd {
+      display:flex; align-items:center; gap:10px;
+      padding-top:8px; margin-bottom:20px;
+    }
+    .page-hd-icon {
+      width:32px; height:32px; flex-shrink:0;
+      background:linear-gradient(135deg,var(--accent),var(--purple));
+      border-radius:9px; display:flex; align-items:center; justify-content:center;
+      box-shadow:0 0 16px rgba(0,210,255,.28);
+    }
+    .page-hd-icon svg { width:15px; height:15px; stroke:#fff; fill:none; stroke-width:2; }
+    .page-hd-title { font-size:22px; font-weight:700; letter-spacing:-.03em; }
+    .page-hd-sub   { font-size:12px; color:var(--text-sec); margin-top:1px; }
+
+    /* ── CARD ── */
+    .card {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:var(--r4); padding:18px; margin-bottom:14px;
+      position:relative; overflow:hidden;
+      backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+    }
+    .card::before {
+      content:""; position:absolute; inset:0; border-radius:var(--r4); pointer-events:none;
+      background:linear-gradient(135deg,rgba(0,210,255,.02) 0%,transparent 50%,rgba(139,92,246,.015) 100%);
+    }
+    .card-title {
+      font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+      color:var(--text-dim); margin-bottom:14px;
+    }
+
+    /* ── MAC HERO ── */
+    .mac-hero {
+      background:linear-gradient(135deg,rgba(0,20,45,.7),rgba(18,8,45,.7));
+      border:1px solid rgba(0,210,255,.18); border-radius:var(--r4);
+      padding:22px 20px; margin-bottom:14px; text-align:center;
+      position:relative; overflow:hidden;
+    }
+    .mac-hero::before {
+      content:""; position:absolute; top:-40%; right:-10%; width:200px; height:200px;
+      background:radial-gradient(circle,rgba(0,210,255,.08) 0%,transparent 70%); pointer-events:none;
+    }
+    .mac-hero-lbl {
+      font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+      color:var(--accent); margin-bottom:8px;
+    }
+    .mac-hero-val {
+      font-family:var(--mono); font-size:24px; font-weight:700;
+      color:#fff; letter-spacing:.06em;
+      text-shadow:0 0 20px rgba(0,210,255,.5),0 0 44px rgba(0,210,255,.18);
+      margin-bottom:6px;
+    }
+    .mac-hero-vendor {
+      font-size:12px; color:var(--text-sec); margin-bottom:16px;
+    }
+    .mac-hero-actions { display:flex; gap:10px; justify-content:center; }
+
+    /* ── VENDOR CHIPS ── */
+    .vendor-chips { display:flex; gap:7px; flex-wrap:wrap; margin-bottom:16px; }
+    .vendor-chip {
+      padding:6px 14px; border-radius:var(--rf); font-size:12px; font-weight:600;
+      border:1px solid var(--border); background:rgba(255,255,255,.03);
+      color:var(--text-sec); cursor:pointer;
+      transition:all 160ms var(--ease); user-select:none; -webkit-user-select:none;
+    }
+    .vendor-chip.active {
+      background:linear-gradient(135deg,var(--accent),var(--purple));
+      border-color:transparent; color:#fff;
+      box-shadow:0 0 14px rgba(0,210,255,.25);
+    }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display:inline-flex; align-items:center; justify-content:center; gap:7px;
+      padding:12px 20px; border-radius:var(--r2); font-size:14px; font-weight:600;
+      font-family:var(--font); border:none; cursor:pointer;
+      transition:all 180ms var(--ease); user-select:none; -webkit-user-select:none;
+    }
+    .btn-primary {
+      background:linear-gradient(135deg,var(--accent),#0099cc);
+      color:#000; box-shadow:0 0 22px rgba(0,210,255,.3);
+    }
+    .btn-primary:active { transform:scale(.97); box-shadow:0 0 10px rgba(0,210,255,.2); }
+    .btn-ghost {
+      background:var(--surface2); border:1px solid var(--border);
+      color:var(--text-sec);
+    }
+    .btn-ghost:active { transform:scale(.97); border-color:var(--accent); color:var(--accent); }
+    .btn-icon {
+      width:42px; height:42px; border-radius:var(--r2); padding:0;
+      background:var(--surface2); border:1px solid var(--border);
+      color:var(--text-sec); flex-shrink:0;
+    }
+    .btn-icon:active { border-color:var(--accent); color:var(--accent); }
+    .btn-icon svg { width:16px; height:16px; stroke:currentColor; fill:none; }
+    .btn-full { width:100%; }
+    .btn-row { display:flex; gap:10px; }
+    .btn-row .btn { flex:1; }
+
+    /* ── NETWORK STATUS ── */
+    .net-status-card {
+      padding:20px; text-align:center; margin-bottom:14px;
+    }
+    .net-indicator {
+      width:56px; height:56px; border-radius:50%; margin:0 auto 14px;
+      display:flex; align-items:center; justify-content:center;
+      border:2px solid currentColor;
+    }
+    .net-indicator svg { width:22px; height:22px; stroke:currentColor; fill:none; }
+    .net-indicator.connected    { color:var(--ok);   background:var(--ok-d);   box-shadow:0 0 20px var(--ok-d); }
+    .net-indicator.disconnected { color:var(--err);  background:var(--err-d);  box-shadow:0 0 20px var(--err-d); }
+    .net-indicator.checking     { color:var(--warn); background:var(--warn-d); box-shadow:0 0 20px var(--warn-d); }
+    .net-status-text { font-size:18px; font-weight:700; margin-bottom:4px; }
+    .net-status-sub  { font-size:13px; color:var(--text-sec); }
+
+    .net-row {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:13px 0; border-bottom:1px solid var(--border);
+    }
+    .net-row:last-child { border-bottom:none; padding-bottom:0; }
+    .net-row-lbl { font-size:13px; color:var(--text-sec); }
+    .net-row-val { font-size:13px; font-family:var(--mono); color:var(--text); font-weight:600; }
+
+    .ios-privacy-note {
+      background:rgba(139,92,246,.08); border:1px solid rgba(139,92,246,.2);
+      border-radius:var(--r2); padding:12px 14px;
+      font-size:12px; color:var(--text-sec); line-height:1.7;
+      margin-top:14px;
+    }
+    .ios-privacy-note strong { color:var(--purple); }
+
+    /* ── HISTORY ── */
+    .hist-empty {
+      text-align:center; padding:40px 20px;
+      color:var(--text-dim); font-size:13px;
+    }
+    .hist-empty svg { width:36px; height:36px; stroke:currentColor; fill:none; opacity:.4; margin-bottom:10px; }
+
+    .hist-item {
+      display:flex; align-items:center; gap:12px;
+      padding:13px 0; border-bottom:1px solid var(--border);
+      animation:vfade 200ms var(--ease);
+    }
+    .hist-item:last-child { border-bottom:none; }
+    .hist-item-main { flex:1; min-width:0; }
+    .hist-item-mac {
+      font-family:var(--mono); font-size:14px; font-weight:700;
+      color:var(--text); letter-spacing:.04em;
+    }
+    .hist-item-meta { font-size:11px; color:var(--text-sec); margin-top:2px; }
+    .hist-item-copy {
+      width:34px; height:34px; border-radius:var(--r1); padding:0;
+      background:var(--accent-d); border:1px solid rgba(0,210,255,.15);
+      color:var(--accent); display:flex; align-items:center; justify-content:center;
+      flex-shrink:0; cursor:pointer; transition:all 140ms;
+    }
+    .hist-item-copy:active { background:rgba(0,210,255,.25); transform:scale(.93); }
+    .hist-item-copy svg { width:14px; height:14px; stroke:currentColor; fill:none; }
+
+    .hist-clear-btn {
+      width:100%; padding:11px; border-radius:var(--r2);
+      background:var(--err-d); border:1px solid rgba(240,79,90,.2);
+      color:var(--err); font-size:13px; font-weight:600; font-family:var(--font);
+      cursor:pointer; margin-top:14px; transition:all 140ms;
+    }
+    .hist-clear-btn:active { transform:scale(.98); }
+
+    /* ── ABOUT ── */
+    .about-hero {
+      text-align:center; padding:10px 0 24px;
+    }
+    .about-app-icon {
+      width:80px; height:80px; border-radius:20px; margin:0 auto 14px;
+      background:linear-gradient(135deg,var(--accent),var(--purple));
+      display:flex; align-items:center; justify-content:center;
+      box-shadow:0 0 30px rgba(0,210,255,.3),0 0 60px rgba(139,92,246,.15);
+    }
+    .about-app-icon svg { width:36px; height:36px; stroke:#fff; fill:none; stroke-width:2; }
+    .about-app-name { font-size:22px; font-weight:700; letter-spacing:-.02em; }
+    .about-app-ver  { font-size:13px; color:var(--accent); margin-top:3px; }
+    .about-row {
+      display:flex; align-items:center; gap:12px; padding:14px 0;
+      border-bottom:1px solid var(--border); cursor:pointer;
+    }
+    .about-row:last-child { border-bottom:none; }
+    .about-row-icon {
+      width:32px; height:32px; border-radius:8px;
+      display:flex; align-items:center; justify-content:center; flex-shrink:0;
+    }
+    .about-row-icon svg { width:14px; height:14px; stroke:currentColor; fill:none; }
+    .about-row-lbl { flex:1; font-size:14px; font-weight:500; }
+    .about-row-chev { color:var(--text-dim); }
+    .about-row-chev svg { width:14px; height:14px; stroke:currentColor; fill:none; }
+    .about-companion-badge {
+      background:linear-gradient(135deg,var(--accent-d),var(--purple-d));
+      border:1px solid rgba(0,210,255,.2); border-radius:var(--r3);
+      padding:16px; text-align:center; margin-bottom:14px;
+    }
+    .about-companion-badge .badge-title { font-size:13px; font-weight:700; color:var(--accent); margin-bottom:4px; }
+    .about-companion-badge .badge-desc  { font-size:12px; color:var(--text-sec); line-height:1.6; }
+
+    /* ── MAC INPUT ── */
+    .mac-input {
+      width:100%; padding:13px 14px; font-family:var(--mono); font-size:15px;
+      color:var(--text); background:rgba(6,12,26,.9);
+      border:1.5px solid var(--border); border-radius:var(--r2);
+      outline:none; transition:border-color 200ms;
+      -webkit-appearance:none;
+    }
+    .mac-input:focus { border-color:rgba(0,210,255,.45); }
+    .mac-input.valid   { border-color:rgba(34,211,165,.5); }
+    .mac-input.invalid { border-color:rgba(240,79,90,.5); }
+
+    /* ── FORM ── */
+    .form-label {
+      display:block; font-size:10px; font-weight:700; letter-spacing:.08em;
+      text-transform:uppercase; color:var(--text-sec); margin-bottom:8px;
+    }
+    .form-group { margin-bottom:16px; }
+
+    /* ── BADGE ── */
+    .badge {
+      display:inline-flex; align-items:center; gap:5px;
+      padding:4px 10px; border-radius:var(--rf);
+      font-size:11px; font-weight:700; letter-spacing:.03em;
+    }
+    .badge-ok   { background:var(--ok-d);   color:var(--ok); }
+    .badge-err  { background:var(--err-d);  color:var(--err); }
+    .badge-warn { background:var(--warn-d); color:var(--warn); }
+    .bdot { width:5px; height:5px; border-radius:50%; background:currentColor; }
+
+    /* ── TOAST ── */
+    .toast-wrap {
+      position:fixed; bottom:calc(var(--tabbar-h) + 12px); left:50%; transform:translateX(-50%);
+      z-index:999; pointer-events:none;
+    }
+    .toast {
+      display:flex; align-items:center; gap:10px;
+      padding:11px 18px; border-radius:var(--rf);
+      background:rgba(15,22,42,.95); border:1px solid var(--border);
+      backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px);
+      font-size:13px; font-weight:500; color:var(--text);
+      box-shadow:0 8px 32px rgba(0,0,0,.5);
+      opacity:0; transform:translateY(8px) scale(.96);
+      transition:opacity 220ms var(--ease),transform 220ms var(--ease);
+      white-space:nowrap; max-width:300px;
+    }
+    .toast.show { opacity:1; transform:translateY(0) scale(1); }
+    .toast.success { border-color:rgba(34,211,165,.3); color:var(--ok); }
+    .toast.error   { border-color:rgba(240,79,90,.3);  color:var(--err); }
+    .t-ico svg { width:15px; height:15px; stroke:currentColor; fill:none; stroke-width:2; }
+
+    /* ── TAB BAR ── */
+    .tab-bar {
+      display:flex; background:rgba(6,10,22,.96);
+      border-top:1px solid var(--border);
+      padding-bottom:var(--safe-bot); flex-shrink:0;
+      backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px);
+      position:relative; z-index:50;
+    }
+    .tab-btn {
+      flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+      gap:3px; height:60px; background:none; border:none; cursor:pointer;
+      color:var(--text-dim); font-family:var(--font); font-size:10px; font-weight:600;
+      letter-spacing:.03em; transition:color 180ms;
+      -webkit-user-select:none; user-select:none;
+    }
+    .tab-btn svg { width:22px; height:22px; stroke:currentColor; fill:none; stroke-width:1.8; }
+    .tab-btn.active { color:var(--accent); }
+    .tab-btn.active svg { filter:drop-shadow(0 0 6px rgba(0,210,255,.5)); }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ═══ GENERATE ═══ -->
+  <div id="view-generate" class="tab-view active">
+    <div class="page-hd">
+      <div class="page-hd-icon">
+        <svg viewBox="0 0 24 24"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg>
+      </div>
+      <div>
+        <div class="page-hd-title">Generator</div>
+        <div class="page-hd-sub">Create randomized MAC addresses</div>
+      </div>
+    </div>
+
+    <!-- Hero -->
+    <div class="mac-hero card">
+      <div class="mac-hero-lbl">Generated MAC Address</div>
+      <div class="mac-hero-val" id="generatedMac">--:--:--:--:--:--</div>
+      <div class="mac-hero-vendor" id="generatedVendor">Tap Generate to start</div>
+      <div class="mac-hero-actions">
+        <button class="btn btn-primary" id="generateBtn" onclick="generateMac()">
+          <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.27"/></svg>
+          Generate
+        </button>
+        <button class="btn btn-ghost btn-icon" onclick="copyMac()" title="Copy">
+          <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        </button>
+        <button class="btn btn-ghost btn-icon" onclick="addToHistory()" title="Save">
+          <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Vendor Picker -->
+    <div class="card">
+      <div class="card-title">Vendor Preset</div>
+      <div class="vendor-chips" id="vendorChips">
+        <span class="vendor-chip active" data-prefix="">Random</span>
+        <span class="vendor-chip" data-prefix="00:1B:44">Apple</span>
+        <span class="vendor-chip" data-prefix="00:50:F2">Intel</span>
+        <span class="vendor-chip" data-prefix="00:00:0C">Cisco</span>
+        <span class="vendor-chip" data-prefix="00:1A:A0">Dell</span>
+        <span class="vendor-chip" data-prefix="00:24:E8">HP</span>
+        <span class="vendor-chip" data-prefix="00:1D:09">Samsung</span>
+        <span class="vendor-chip" data-prefix="B8:27:EB">Raspberry Pi</span>
+      </div>
+
+      <div class="form-group" style="margin-bottom:0;">
+        <label class="form-label">Custom / Edit MAC</label>
+        <input class="mac-input" id="customMacInput" placeholder="AA:BB:CC:DD:EE:FF" maxlength="17"
+               oninput="onCustomInput(this)" onkeydown="if(event.key==='Enter')copyMac()">
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ NETWORK ═══ -->
+  <div id="view-network" class="tab-view">
+    <div class="page-hd">
+      <div class="page-hd-icon" style="background:linear-gradient(135deg,var(--ok),#0f9b7c);">
+        <svg viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+      </div>
+      <div>
+        <div class="page-hd-title">Network</div>
+        <div class="page-hd-sub">Live connection info</div>
+      </div>
+    </div>
+
+    <!-- Status indicator -->
+    <div class="card net-status-card" id="netStatusCard">
+      <div class="net-indicator checking" id="netIndicator">
+        <svg viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+      </div>
+      <div class="net-status-text" id="netStatusText">Checking…</div>
+      <div class="net-status-sub"  id="netStatusSub">Detecting connection</div>
+    </div>
+
+    <!-- Details -->
+    <div class="card" id="netDetailsCard">
+      <div class="card-title">Connection Details</div>
+      <div class="net-row">
+        <span class="net-row-lbl">Type</span>
+        <span class="net-row-val" id="netType">—</span>
+      </div>
+      <div class="net-row">
+        <span class="net-row-lbl">Status</span>
+        <span class="net-row-val" id="netConnected">—</span>
+      </div>
+      <div class="net-row" id="netIpRow">
+        <span class="net-row-lbl">IP Address</span>
+        <span class="net-row-val" id="netIp">—</span>
+      </div>
+    </div>
+
+    <div class="ios-privacy-note">
+      <strong>About MAC on iOS</strong><br>
+      Since iOS 14, Apple randomizes Wi-Fi MAC addresses per network for privacy. Your real hardware MAC address is not accessible to apps. This is by design — use the macOS companion app to manage MAC addresses on your computer.
+    </div>
+
+    <button class="btn btn-ghost btn-full" style="margin-top:14px;" onclick="refreshNetwork()">
+      <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;"><path d="M3 2v6h6"/><path d="M3 13a9 9 0 1 0 3-7.7L3 8"/></svg>
+      Refresh
+    </button>
+  </div>
+
+  <!-- ═══ HISTORY ═══ -->
+  <div id="view-history" class="tab-view">
+    <div class="page-hd">
+      <div class="page-hd-icon" style="background:linear-gradient(135deg,var(--purple),#6d35d8);">
+        <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      </div>
+      <div>
+        <div class="page-hd-title">History</div>
+        <div class="page-hd-sub">Saved MAC addresses</div>
+      </div>
+    </div>
+
+    <div class="card" id="histContainer">
+      <div class="hist-empty" id="histEmpty">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <div>No saved MACs yet.</div>
+        <div style="margin-top:4px;font-size:12px;">Generate one and tap the bookmark icon.</div>
+      </div>
+      <div id="histList"></div>
+    </div>
+    <button class="hist-clear-btn" id="histClearBtn" onclick="clearHistory()" style="display:none;">
+      Clear History
+    </button>
+  </div>
+
+  <!-- ═══ ABOUT ═══ -->
+  <div id="view-about" class="tab-view">
+    <div class="page-hd">
+      <div class="page-hd-icon" style="background:linear-gradient(135deg,#f59e0b,#e07b00);">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      </div>
+      <div>
+        <div class="page-hd-title">About</div>
+        <div class="page-hd-sub">App info &amp; support</div>
+      </div>
+    </div>
+
+    <div class="about-hero">
+      <div class="about-app-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <div class="about-app-name">MAC Addy Spoofer</div>
+      <div class="about-app-ver">iOS Companion · v1.0.0</div>
+    </div>
+
+    <div class="about-companion-badge">
+      <div class="badge-title">macOS Companion App</div>
+      <div class="badge-desc">This app pairs with <strong style="color:var(--text);">MAC Addy Spoofer for macOS</strong> — the desktop app that actually changes your network interface MAC addresses with administrator privileges.</div>
+    </div>
+
+    <div class="card">
+      <div class="about-row" onclick="openMail('Feedback')">
+        <div class="about-row-icon" style="background:var(--accent-d);color:var(--accent);">
+          <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </div>
+        <span class="about-row-lbl">Send Feedback</span>
+        <div class="about-row-chev"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+      </div>
+      <div class="about-row" onclick="openMail('Bug Report')">
+        <div class="about-row-icon" style="background:var(--err-d);color:var(--err);">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </div>
+        <span class="about-row-lbl">Report a Problem</span>
+        <div class="about-row-chev"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Details</div>
+      <div class="net-row">
+        <span class="net-row-lbl">Version</span>
+        <span class="net-row-val">1.0.0</span>
+      </div>
+      <div class="net-row">
+        <span class="net-row-lbl">Platform</span>
+        <span class="net-row-val" id="platformInfo">iOS</span>
+      </div>
+      <div class="net-row" style="border-bottom:none;padding-bottom:0;">
+        <span class="net-row-lbl">Developer</span>
+        <span class="net-row-val">Bobby Vongchanh</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast-wrap">
+    <div class="toast" id="toast">
+      <div class="t-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+      <span id="toastMsg"></span>
+    </div>
+  </div>
+
+  <!-- ═══ TAB BAR ═══ -->
+  <nav class="tab-bar" id="tabBar">
+    <button class="tab-btn active" data-tab="generate" onclick="switchTab(this)">
+      <svg viewBox="0 0 24 24"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg>
+      Generate
+    </button>
+    <button class="tab-btn" data-tab="network" onclick="switchTab(this)">
+      <svg viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+      Network
+    </button>
+    <button class="tab-btn" data-tab="history" onclick="switchTab(this)">
+      <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      History
+    </button>
+    <button class="tab-btn" data-tab="about" onclick="switchTab(this)">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      About
+    </button>
+  </nav>
+</div>
+
+<script>
+// ── Vendor DB ──────────────────────────────────────────────────────────────────
+const vendorMap = {
+  '00:00:0C':'Cisco Systems','00:1B:44':'Apple Inc.','00:50:F2':'Intel Corp.',
+  '00:1A:A0':'Dell Inc.','00:24:E8':'HP Inc.','00:1D:09':'Samsung Electronics',
+  'B8:27:EB':'Raspberry Pi Foundation','00:26:B9':'Lenovo','00:0C:29':'VMware Inc.',
+  '00:15:5D':'Microsoft Corp.','08:00:27':'Oracle VirtualBox','00:50:56':'VMware Inc.',
+};
+
+function getVendor(mac) {
+  const prefix3 = mac.substring(0,8).toUpperCase();
+  const prefix2 = mac.substring(0,5).toUpperCase();
+  return vendorMap[prefix3] || vendorMap[prefix2] || 'Unknown Vendor';
+}
+
+// ── State ──────────────────────────────────────────────────────────────────────
+let currentMac = '';
+let history = JSON.parse(localStorage.getItem('macaddy-history') || '[]');
+
+// ── MAC Generation ─────────────────────────────────────────────────────────────
+function randByte() { return Math.floor(Math.random()*256).toString(16).padStart(2,'0').toUpperCase(); }
+function randSuffix() { return [randByte(),randByte(),randByte()].join(':'); }
+function generateCompletelyRandom() { return [randByte(),randByte(),randByte(),randByte(),randByte(),randByte()].join(':'); }
+
+function generateMac() {
+  const activeChip = document.querySelector('.vendor-chip.active');
+  const prefix = activeChip ? activeChip.dataset.prefix : '';
+  currentMac = prefix ? prefix + ':' + randSuffix() : generateCompletelyRandom();
+  document.getElementById('generatedMac').textContent  = currentMac;
+  document.getElementById('generatedVendor').textContent = getVendor(currentMac);
+  document.getElementById('customMacInput').value = currentMac;
+  document.getElementById('customMacInput').classList.remove('valid','invalid');
+  const btn = document.getElementById('generateBtn');
+  btn.style.transform = 'scale(.95)';
+  setTimeout(() => btn.style.transform = '', 120);
+}
+
+// ── Vendor chips ──────────────────────────────────────────────────────────────
+document.getElementById('vendorChips').addEventListener('click', e => {
+  const chip = e.target.closest('.vendor-chip');
+  if (!chip) return;
+  document.querySelectorAll('.vendor-chip').forEach(c => c.classList.remove('active'));
+  chip.classList.add('active');
+});
+
+// ── Custom input ──────────────────────────────────────────────────────────────
+function onCustomInput(el) {
+  let v = el.value.replace(/[^0-9a-fA-F:]/g,'');
+  el.value = v;
+  const isValid = /^([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}$/.test(v);
+  el.classList.toggle('valid',   isValid);
+  el.classList.toggle('invalid', v.length===17 && !isValid);
+  if (isValid) {
+    currentMac = v.toUpperCase();
+    document.getElementById('generatedMac').textContent = currentMac;
+    document.getElementById('generatedVendor').textContent = getVendor(currentMac);
+  }
+}
+
+// ── Copy ──────────────────────────────────────────────────────────────────────
+async function copyMac() {
+  const mac = currentMac || document.getElementById('generatedMac').textContent;
+  if (!mac || mac.includes('-')) { showToast('Generate a MAC first','error'); return; }
+  try {
+    if (window.Capacitor?.Plugins?.Clipboard) {
+      await window.Capacitor.Plugins.Clipboard.write({ string: mac });
+    } else {
+      await navigator.clipboard.writeText(mac);
+    }
+    showToast('Copied: ' + mac, 'success');
+  } catch(e) {
+    showToast('Copy failed — try again', 'error');
+  }
+}
+
+// ── History ───────────────────────────────────────────────────────────────────
+function addToHistory() {
+  const mac = currentMac;
+  if (!mac || mac.includes('-')) { showToast('Generate a MAC first','error'); return; }
+  const entry = {
+    mac,
+    vendor: getVendor(mac),
+    ts: new Date().toLocaleString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',hour12:true})
+  };
+  history.unshift(entry);
+  if (history.length > 100) history = history.slice(0,100);
+  localStorage.setItem('macaddy-history', JSON.stringify(history));
+  renderHistory();
+  showToast('Saved to history','success');
+}
+
+function renderHistory() {
+  const list  = document.getElementById('histList');
+  const empty = document.getElementById('histEmpty');
+  const btn   = document.getElementById('histClearBtn');
+  if (history.length === 0) {
+    empty.style.display = '';
+    list.innerHTML = '';
+    btn.style.display = 'none';
+    return;
+  }
+  empty.style.display = 'none';
+  btn.style.display = '';
+  list.innerHTML = history.slice(0,50).map((e,i) => `
+    <div class="hist-item">
+      <div class="hist-item-main">
+        <div class="hist-item-mac">${e.mac}</div>
+        <div class="hist-item-meta">${e.vendor} · ${e.ts}</div>
+      </div>
+      <button class="hist-item-copy" onclick="copyHistMac('${e.mac}')" title="Copy">
+        <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      </button>
+    </div>
+  `).join('');
+}
+
+async function copyHistMac(mac) {
+  try {
+    if (window.Capacitor?.Plugins?.Clipboard) {
+      await window.Capacitor.Plugins.Clipboard.write({ string: mac });
+    } else {
+      await navigator.clipboard.writeText(mac);
+    }
+    showToast('Copied: ' + mac, 'success');
+  } catch(e) { showToast('Copy failed','error'); }
+}
+
+function clearHistory() {
+  history = [];
+  localStorage.removeItem('macaddy-history');
+  renderHistory();
+  showToast('History cleared','success');
+}
+
+// ── Network ───────────────────────────────────────────────────────────────────
+async function refreshNetwork() {
+  document.getElementById('netIndicator').className = 'net-indicator checking';
+  document.getElementById('netStatusText').textContent = 'Checking…';
+  document.getElementById('netStatusSub').textContent  = 'Detecting connection';
+
+  try {
+    let connected = true, type = 'Unknown';
+
+    if (window.Capacitor?.Plugins?.Network) {
+      const s = await window.Capacitor.Plugins.Network.getStatus();
+      connected = s.connected;
+      type = s.connectionType || 'Unknown';
+    } else {
+      connected = navigator.onLine;
+      type = navigator.connection?.type || (navigator.onLine ? 'Online' : 'None');
+    }
+
+    const typeLabel = { wifi:'Wi-Fi', cellular:'Cellular', none:'No Connection', ethernet:'Ethernet' }[type] || type;
+    document.getElementById('netType').textContent = typeLabel;
+    document.getElementById('netConnected').textContent = connected ? '✓ Connected' : '✗ Offline';
+
+    if (connected) {
+      document.getElementById('netIndicator').className = 'net-indicator connected';
+      document.getElementById('netStatusText').textContent = 'Connected';
+      document.getElementById('netStatusSub').textContent  = typeLabel;
+    } else {
+      document.getElementById('netIndicator').className = 'net-indicator disconnected';
+      document.getElementById('netStatusText').textContent = 'Offline';
+      document.getElementById('netStatusSub').textContent  = 'No internet connection';
+    }
+
+    // IP via RTCPeerConnection (best-effort, iOS restricted)
+    try {
+      const ip = await getLocalIP();
+      document.getElementById('netIp').textContent = ip || '—';
+    } catch(e) {
+      document.getElementById('netIp').textContent = 'Unavailable';
+    }
+
+  } catch(e) {
+    document.getElementById('netIndicator').className = 'net-indicator disconnected';
+    document.getElementById('netStatusText').textContent = 'Unknown';
+    document.getElementById('netStatusSub').textContent  = 'Could not detect network';
+  }
+}
+
+function getLocalIP() {
+  return new Promise((resolve) => {
+    const pc = new RTCPeerConnection({ iceServers: [] });
+    pc.createDataChannel('');
+    pc.createOffer().then(o => pc.setLocalDescription(o));
+    pc.onicecandidate = e => {
+      if (!e || !e.candidate) return;
+      const m = e.candidate.candidate.match(/(\d+\.\d+\.\d+\.\d+)/);
+      if (m && m[1] !== '0.0.0.0') { pc.close(); resolve(m[1]); }
+    };
+    setTimeout(() => { pc.close(); resolve(null); }, 1500);
+  });
+}
+
+// Network change listener
+if (window.Capacitor?.Plugins?.Network) {
+  window.Capacitor.Plugins.Network.addListener('networkStatusChange', () => refreshNetwork());
+}
+window.addEventListener('online',  () => refreshNetwork());
+window.addEventListener('offline', () => refreshNetwork());
+
+// ── Navigation ────────────────────────────────────────────────────────────────
+function switchTab(btn) {
+  const tab = btn.dataset.tab;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.tab-view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + tab).classList.add('active');
+  if (tab === 'network') refreshNetwork();
+}
+
+// ── Mail ──────────────────────────────────────────────────────────────────────
+function openMail(type) {
+  const sub  = encodeURIComponent('MAC Addy Spoofer iOS – ' + type);
+  const body = encodeURIComponent(
+    type === 'Bug Report'
+      ? 'What happened:\n\nSteps to reproduce:\n\nDevice / iOS Version:\n'
+      : 'Your feedback:\n\n'
+  );
+  window.open('mailto:iambobbyv@icloud.com?subject=' + sub + '&body=' + body, '_self');
+}
+
+// ── Toast ─────────────────────────────────────────────────────────────────────
+let _toastTimer;
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  const icons = {
+    success: '<svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
+    error:   '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
+    default: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>'
+  };
+  t.querySelector('.t-ico').innerHTML = icons[type] || icons.default;
+  document.getElementById('toastMsg').textContent = msg;
+  t.className = 'toast show ' + (type || 'default');
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ── Platform detect ───────────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  const isNative = !!window.Capacitor?.isNative;
+  document.getElementById('platformInfo').textContent =
+    isNative ? (window.Capacitor?.getPlatform?.() || 'iOS') : 'Browser (preview)';
+  renderHistory();
+  refreshNetwork();
+});
+</script>
+</body>
+</html>

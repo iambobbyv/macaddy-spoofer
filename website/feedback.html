@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Feedback &amp; Inquiries — MAC Addy Spoofer</title>
+  <meta name="description" content="Send feedback, report bugs, or make inquiries about MAC Addy Spoofer." />
+  <link rel="canonical" href="https://macaddy.souriapps.net/feedback" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="https://macaddy.souriapps.net" class="site-logo">
+        <div class="logo-mark">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <span class="logo-name">MAC Addy <span>Spoofer</span></span>
+      </a>
+      <nav class="site-nav">
+        <a href="support.html">Support</a>
+        <a href="faq.html">FAQ</a>
+        <a href="feedback.html" class="active">Feedback</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+
+    <section class="hero hero-sm">
+      <div class="container" style="max-width:var(--max-w);margin:0 auto;text-align:center;">
+        <div class="hero-badge">Contact</div>
+        <h1 class="hero-title">Feedback &amp; <span class="grad">Inquiries</span></h1>
+        <p class="hero-subtitle">
+          We'd love to hear from you. Report a bug, suggest a feature, or just say hello.
+          We typically respond within one business day.
+        </p>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:8px;">
+      <div class="container page-wrap" style="padding-bottom:0;">
+
+        <!-- Quick Contact Options -->
+        <div class="card-grid card-grid-2" style="margin-bottom:40px;">
+          <div class="card card-compact">
+            <span class="card-icon">🐛</span>
+            <h3 class="card-title">Report a Bug</h3>
+            <p class="card-body">Found something that isn't working correctly? Include your macOS version and steps to reproduce.</p>
+            <a href="mailto:support@souriapps.net?subject=MAC%20Addy%20Spoofer%20%E2%80%93%20Bug%20Report&body=What%20I%20was%20trying%20to%20do%3A%0A%0AWhat%20I%20expected%3A%0A%0AWhat%20happened%3A%0A%0ASteps%20to%20reproduce%3A%0A%0AmacOS%20Version%3A%0A" class="btn btn-outline btn-sm">Email Support →</a>
+          </div>
+          <div class="card card-compact card-highlight">
+            <span class="card-icon">💡</span>
+            <h3 class="card-title">Feature Request</h3>
+            <p class="card-body">Have an idea for a new feature or improvement? We read every suggestion.</p>
+            <a href="mailto:feedback@souriapps.net?subject=MAC%20Addy%20Spoofer%20%E2%80%93%20Feature%20Request&body=Your%20idea%3A%0A%0AWhy%20it%20would%20be%20useful%3A%0A" class="btn btn-primary btn-sm">Send Idea →</a>
+          </div>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="form-wrap">
+          <h2 style="font-size:18px;font-weight:700;color:var(--text-primary);margin-bottom:6px;letter-spacing:-.01em;">Send a Message</h2>
+          <p style="font-size:14px;color:var(--text-secondary);margin-bottom:28px;">Fill out the form below and we'll get back to you at your email address.</p>
+
+          <form id="feedbackForm" onsubmit="handleSubmit(event)">
+
+            <div class="form-group">
+              <label class="form-label" for="name">Your Name</label>
+              <input class="form-input" id="name" name="name" type="text" placeholder="Jane Smith" required autocomplete="name" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="email">Email Address</label>
+              <input class="form-input" id="email" name="email" type="email" placeholder="jane@example.com" required autocomplete="email" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="type">Type of Inquiry</label>
+              <select class="form-select form-input" id="type" name="type">
+                <option value="feedback">General Feedback</option>
+                <option value="bug">Bug Report</option>
+                <option value="feature">Feature Request</option>
+                <option value="support">Technical Support</option>
+                <option value="purchase">Purchase / Billing</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="subject">Subject</label>
+              <input class="form-input" id="subject" name="subject" type="text" placeholder="Brief description of your message" required />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="message">Message</label>
+              <textarea class="form-textarea" id="message" name="message" placeholder="Describe your feedback, bug, or question in as much detail as helpful..." required></textarea>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="macos">macOS Version (optional)</label>
+              <input class="form-input" id="macos" name="macos" type="text" placeholder="e.g. macOS 15.3 Sequoia" />
+            </div>
+
+            <button type="submit" class="form-submit">Send Message</button>
+
+            <p class="form-note">
+              By submitting this form, your message will be sent to
+              <strong>feedback@souriapps.net</strong>.<br />
+              We respect your privacy and will only use your email to reply to your inquiry.
+              See our <a href="privacy.html" style="color:var(--cyan);">Privacy Policy</a>.
+            </p>
+          </form>
+
+          <div class="success-msg" id="successMsg">
+            ✓ Message sent! We'll be in touch within one business day.
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Alternative Contact -->
+    <section class="section">
+      <div class="container page-wrap" style="padding-bottom:0;">
+        <div class="info-banner">
+          <div class="info-banner-icon">📬</div>
+          <div>
+            <strong>Prefer to email directly?</strong>
+            You can also reach us at
+            <a href="mailto:feedback@souriapps.net" style="color:var(--cyan);">feedback@souriapps.net</a>
+            for general inquiries and feature ideas, or
+            <a href="mailto:support@souriapps.net" style="color:var(--cyan);">support@souriapps.net</a>
+            for technical support and bug reports.
+            For billing issues, use the
+            <a href="https://reportaproblem.apple.com" target="_blank" rel="noopener" style="color:var(--cyan);">Apple Report a Problem</a> page.
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <div class="footer-logo-mark">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        MAC Addy Spoofer
+      </div>
+      <div class="footer-links">
+        <a href="support.html">Support</a>
+        <a href="faq.html">FAQ</a>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Service</a>
+        <a href="https://souriapps.net">SouriApps</a>
+      </div>
+      <p class="footer-copy">© 2026 Souriya Bobby Vongchanh (SouriApps). All rights reserved.</p>
+      <p class="footer-built">Built with care by Souriya Bobby Vongchanh</p>
+    </div>
+  </footer>
+
+  <script>
+    function handleSubmit(e) {
+      e.preventDefault();
+      const form = document.getElementById('feedbackForm');
+      const name    = encodeURIComponent(document.getElementById('name').value);
+      const email   = document.getElementById('email').value;
+      const type    = document.getElementById('type').value;
+      const subject = encodeURIComponent(document.getElementById('subject').value);
+      const message = encodeURIComponent(document.getElementById('message').value);
+      const macos   = encodeURIComponent(document.getElementById('macos').value);
+
+      const toEmail = (type === 'bug' || type === 'support' || type === 'purchase')
+        ? 'support@souriapps.net'
+        : 'feedback@souriapps.net';
+
+      const body = encodeURIComponent(
+        `Name: ${decodeURIComponent(name)}\nReply-to: ${email}\nmacOS: ${decodeURIComponent(macos)}\n\n${decodeURIComponent(message)}`
+      );
+
+      const mailtoUrl = `mailto:${toEmail}?subject=MAC%20Addy%20Spoofer%20%E2%80%93%20${subject}&body=${body}`;
+      window.location.href = mailtoUrl;
+
+      document.getElementById('successMsg').style.display = 'block';
+      form.reset();
+    }
+  </script>
+
+</body>
+</html>
