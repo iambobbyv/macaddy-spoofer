@@ -539,6 +539,10 @@
     .theme-toggle:hover{background:var(--accent-d);border-color:rgba(0,210,255,.22);}
     .theme-toggle svg{width:14px;height:14px;stroke:var(--text-sec);fill:none;transition:stroke 180ms;}
     .theme-toggle:hover svg{stroke:var(--accent);}
+
+    /* ── TEXT SELECTION ── */
+    ::selection{background:rgba(0,210,255,.35);color:#fff;}
+    html[data-theme="light"] ::selection{background:rgba(0,136,187,.22);color:#0a1a30;}
   </style>
 </head>
 <body>
