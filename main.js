@@ -348,9 +348,11 @@ ipcMain.handle('net:testConnection', async (_event, iface) => {
 // inside the packaged app __dirname lives in app.asar, which external
 // processes (bash via osascript) cannot read — the script approach only works
 // in dev. scripts/mac-changer-*.sh remain in the repo for manual sudo use.
+// Privileged ops are serialized through runPrivilegedSerially (one admin
+// prompt at a time; concurrent calls QUEUE rather than racing).
 ipcMain.handle('mac:change', async (_event, { iface, newMac }) => {
     const batch = [{ iface: sanitizeIface(iface), mac: sanitizeMac(newMac) }];
-    const results = await applyMacBatch(batch);
+    const results = await runPrivilegedSerially(() => applyMacBatch(batch));
     const r = results[0];
     if (!r.ok) {
         throw new Error(r.error || `Change not verified (read back ${r.actual || 'no MAC'} on ${r.iface})`);
@@ -367,8 +369,25 @@ ipcMain.handle('mac:changeBatch', async (_event, { changes }) => {
         iface: sanitizeIface(iface),
         mac: sanitizeMac(newMac)
     }));
-    return { results: await applyMacBatch(batch) };
+    return { results: await runPrivilegedSerially(() => applyMacBatch(batch)) };
 });
+
+// ── IPC: App version (data-driven version labels in the renderer) ────────────
+ipcMain.handle('app:getVersion', () => app.getVersion());
+
+// ── Privileged-op serialization ──────────────────────────────────────────────
+// Re-entrancy guard: concurrent mac:change/mac:changeBatch calls are QUEUED
+// behind this promise chain instead of running in parallel, so overlapping
+// osascript admin prompts or interleaved `ifconfig down/up` sequences on the
+// same interface can't happen. Each caller's result/rejection still resolves
+// to that caller; a failure in one op never blocks the queue.
+let privilegedQueue = Promise.resolve();
+
+function runPrivilegedSerially(op) {
+    const run = privilegedQueue.then(op, op); // run even if the previous op rejected
+    privilegedQueue = run.catch(() => {});   // swallow here so the chain stays alive
+    return run;                              // the caller still sees its own rejection
+}
 
 // ── Privileged MAC apply ─────────────────────────────────────────────────────
 // Runs one `do shell script … with administrator privileges` for the whole
@@ -377,9 +396,21 @@ ipcMain.handle('mac:changeBatch', async (_event, { changes }) => {
 async function applyMacBatch(batch) {
     // Values are pre-sanitized: iface is [a-zA-Z0-9]+, mac is strict
     // XX:XX:XX:XX:XX:XX hex — safe to interpolate, no shell metacharacters.
+    //
+    // Per-interface attempt semantics: each interface's down/ether/up trio is
+    // `&&`-chained (don't set ether if down failed), but interfaces are
+    // `;`-separated — NEVER `&&`-joined across interfaces. A failure on one
+    // interface must not skip the rest of the batch; every interface is
+    // attempted, and per-interface outcomes come from the read-back
+    // verification loop below (each in its own try/catch).
+    //
+    // The trailing `; true` forces exit 0 so a failing LAST trio can't make
+    // `exec` reject and skip the verification loop (which would mark earlier
+    // successes as Failed). User-cancel still raises -128 inside osascript
+    // before the shell runs, so cancel detection is unaffected.
     const script = batch
-        .map(({ iface, mac }) => `ifconfig ${iface} down && ifconfig ${iface} ether ${mac} && ifconfig ${iface} up`)
-        .join(' && ');
+        .map(({ iface, mac }) => `(ifconfig ${iface} down && ifconfig ${iface} ether ${mac} && ifconfig ${iface} up)`)
+        .join('; ') + '; true';
 
     try {
         await runWithAdminPrivileges(script);
