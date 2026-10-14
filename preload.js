@@ -8,6 +8,11 @@ contextBridge.exposeInMainWorld('macApi', {
     changeMac: (iface, newMac) =>
         ipcRenderer.invoke('mac:change', { iface, newMac }),
 
+    // Batch change — applies to several interfaces with a single admin prompt.
+    // changes: [{ iface, newMac }] → { results: [{ iface, requested, actual, ok, error? }] }
+    changeMacBatch: (changes) =>
+        ipcRenderer.invoke('mac:changeBatch', { changes }),
+
     getCurrentMac: (iface) =>
         ipcRenderer.invoke('mac:getCurrent', iface),
 

@@ -342,55 +342,89 @@ ipcMain.handle('net:testConnection', async (_event, iface) => {
     });
 });
 
-// ── IPC: Change MAC (osascript admin elevation) ──────────────────────────────
+// ── IPC: Change MAC (single interface) ───────────────────────────────────────
+// NOTE: the privileged command is built inline from sanitized values and run
+// via osascript. We deliberately do NOT exec scripts/ from __dirname here:
+// inside the packaged app __dirname lives in app.asar, which external
+// processes (bash via osascript) cannot read — the script approach only works
+// in dev. scripts/mac-changer-*.sh remain in the repo for manual sudo use.
 ipcMain.handle('mac:change', async (_event, { iface, newMac }) => {
+    const batch = [{ iface: sanitizeIface(iface), mac: sanitizeMac(newMac) }];
+    const results = await applyMacBatch(batch);
+    const r = results[0];
+    if (!r.ok) {
+        throw new Error(r.error || `Change not verified (read back ${r.actual || 'no MAC'} on ${r.iface})`);
+    }
+    return { ok: true, output: r.actual };
+});
+
+// ── IPC: Change MACs (batch — one admin prompt for all interfaces) ───────────
+ipcMain.handle('mac:changeBatch', async (_event, { changes }) => {
+    if (!Array.isArray(changes) || changes.length < 1 || changes.length > 8) {
+        throw new Error('Invalid batch: expected 1–8 interface changes');
+    }
+    const batch = changes.map(({ iface, newMac }) => ({
+        iface: sanitizeIface(iface),
+        mac: sanitizeMac(newMac)
+    }));
+    return { results: await applyMacBatch(batch) };
+});
+
+// ── Privileged MAC apply ─────────────────────────────────────────────────────
+// Runs one `do shell script … with administrator privileges` for the whole
+// batch (single password prompt), then verifies each interface by reading the
+// MAC back with ifconfig (no privileges needed for reads).
+async function applyMacBatch(batch) {
+    // Values are pre-sanitized: iface is [a-zA-Z0-9]+, mac is strict
+    // XX:XX:XX:XX:XX:XX hex — safe to interpolate, no shell metacharacters.
+    const script = batch
+        .map(({ iface, mac }) => `ifconfig ${iface} down && ifconfig ${iface} ether ${mac} && ifconfig ${iface} up`)
+        .join(' && ');
+
     try {
-        const safeIface = sanitizeIface(iface);
-        const safeMac   = sanitizeMac(newMac);
-        const scriptPath = path.join(__dirname, 'scripts', 'mac-changer-macos.sh');
-        const shellCmd  = `bash '${scriptPath}' '${safeIface}' '${safeMac}'`;
-
-        return await runWithAdminPrivileges(shellCmd);
-
+        await runWithAdminPrivileges(script);
     } catch (err) {
         const cancelled = /(-128|cancelled|canceled)/i.test(err.message);
-        if (!cancelled) {
-            dialog.showErrorBox(
-                'MAC Change Failed',
-                [
-                    err.message,
-                    '',
-                    'Common causes:',
-                    '• The interface may be down or not support MAC spoofing.',
-                    '• Bluetooth MAC changes are restricted on newer macOS.',
-                    '• Try Wi-Fi (en0) or Ethernet (en1/en2) instead.',
-                    '',
-                    'The macOS password dialog must be completed to apply changes.'
-                ].join('\n')
-            );
-        }
+        if (!cancelled) showMacError(err.message);
         throw err;
     }
-});
+
+    const results = [];
+    for (const { iface, mac } of batch) {
+        try {
+            const actual = await readMac(iface);
+            const ok = !!actual && actual.toLowerCase() === mac;
+            results.push({ iface, requested: mac.toUpperCase(), actual, ok,
+                ...(!ok && { error: `Verification failed (read back ${actual || 'no MAC'})` }) });
+        } catch (err) {
+            results.push({ iface, requested: mac.toUpperCase(), actual: null, ok: false, error: err.message });
+        }
+    }
+    return results;
+}
+
+function showMacError(message) {
+    dialog.showErrorBox(
+        'MAC Change Failed',
+        [
+            message,
+            '',
+            'Common causes:',
+            '• The interface may be down or not support MAC spoofing.',
+            '• Bluetooth MAC changes are restricted on newer macOS.',
+            '• Try Wi-Fi (en0) or Ethernet (en1/en2) instead.',
+            '',
+            'The macOS password dialog must be completed to apply changes.'
+        ].join('\n')
+    );
+}
 
 // ── IPC: Get current MAC ─────────────────────────────────────────────────────
 ipcMain.handle('mac:getCurrent', async (_event, iface) => {
-    return new Promise((resolve, reject) => {
-        try {
-            const safeIface = sanitizeIface(iface);
-            const child = execFile('ifconfig', [safeIface]);
-            let stdout = '';
-            let stderr = '';
-            child.stdout.on('data', d => { stdout += d.toString(); });
-            child.stderr.on('data', d => { stderr += d.toString(); });
-            child.on('error', err => reject(err));
-            child.on('exit', code => {
-                if (code !== 0) return reject(new Error(stderr || `ifconfig exited with code ${code}`));
-                const match = stdout.match(/ether\s+([0-9a-f:]+)/i);
-                resolve(match ? match[1].toUpperCase() : null);
-            });
-        } catch (err) { reject(err); }
-    });
+    const safeIface = sanitizeIface(iface);
+    const mac = await readMac(safeIface);
+    if (!mac) throw new Error(`Could not read MAC address for ${safeIface}`);
+    return mac;
 });
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -412,4 +446,22 @@ function sanitizeIface(iface) {
 function sanitizeMac(mac) {
     if (!/^([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}$/.test(mac)) throw new Error(`Invalid MAC address: ${mac}`);
     return mac.toLowerCase();
+}
+
+// Non-privileged MAC read via ifconfig. Returns the MAC in uppercase, or null
+// when the interface reports none. Rejects when ifconfig itself fails.
+function readMac(iface) {
+    return new Promise((resolve, reject) => {
+        const child = execFile('ifconfig', [iface]);
+        let stdout = '';
+        let stderr = '';
+        child.stdout.on('data', d => { stdout += d.toString(); });
+        child.stderr.on('data', d => { stderr += d.toString(); });
+        child.on('error', err => reject(err));
+        child.on('exit', code => {
+            if (code !== 0) return reject(new Error(stderr.trim() || `ifconfig exited with code ${code}`));
+            const match = stdout.match(/ether\s+([0-9a-f:]+)/i);
+            resolve(match ? match[1].toUpperCase() : null);
+        });
+    });
 }

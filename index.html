@@ -1220,7 +1220,7 @@ async function applyMAC() {
     const ok = await macApi.confirm({
       title: 'Apply MAC Address',
       message: `Apply MAC ${mac} to ${selectedIface} (${targetOS})?`,
-      detail: 'This will call the mac-changer script with administrator privileges and prompt for your password.',
+      detail: 'This runs a privileged system command (ifconfig) and prompts for your password once.',
       confirmLabel: 'Apply', cancelLabel: 'Cancel'
     });
     if (!ok) return;
@@ -1239,12 +1239,32 @@ async function applyMAC() {
   showToast('MAC address applied to '+selectedIface+'!','success');
 }
 
-function restoreOriginal() {
-  const old = currentMACs[selectedIface];
-  currentMACs[selectedIface] = originalMACs[selectedIface];
-  addHistory(selectedIface, old, originalMACs[selectedIface], 'Original','Restored');
-  updateAllDisplays(); updateMatrixMACs();
-  showToast('Original MAC restored for '+selectedIface,'success');
+async function restoreOriginal() {
+  const targetOS = ifaceMap[selectedIface];
+  const orig = (originalMACs[selectedIface] || '').toUpperCase();
+  if (!targetOS || !/^([0-9A-F]{2}:){5}[0-9A-F]{2}$/.test(orig)) {
+    showToast('No valid original MAC recorded for ' + selectedIface, 'error');
+    return;
+  }
+  if (settings.confirmApply && window.macApi) {
+    const ok = await window.macApi.confirm({
+      title: 'Restore Original MAC',
+      message: `Restore ${selectedIface} (${targetOS}) to ${orig}?`,
+      detail: 'This runs a privileged system command and prompts for your password.',
+      confirmLabel: 'Restore', cancelLabel: 'Cancel'
+    });
+    if (!ok) return;
+  }
+  if (window.macApi && window.macApi.changeMac) {
+    try {
+      await window.macApi.changeMac(targetOS, orig);
+      const old = currentMACs[selectedIface];
+      currentMACs[selectedIface] = orig;
+      addHistory(selectedIface, old, orig, 'Original', 'Restored');
+      updateAllDisplays(); updateMatrixMACs();
+      showToast('Original MAC restored for ' + selectedIface, 'success');
+    } catch(err) { showToast('Restore failed: ' + err.message, 'error'); }
+  } else { showToast('Restore requires Electron runtime', 'error'); }
 }
 
 async function refreshMAC() {
@@ -1257,26 +1277,83 @@ async function refreshMAC() {
   } else { showToast('Refresh requires Electron runtime','error'); }
 }
 
-function randomizeAll() {
-  Object.keys(currentMACs).forEach(ui => {
-    const mac = generateCompletelyRandomMAC();
-    const old = currentMACs[ui];
-    currentMACs[ui] = mac;
-    addHistory(ui, old, mac, getVendorName(mac), 'Applied');
-    document.getElementById('m-last-'+ui).textContent = new Date().toLocaleTimeString();
-  });
-  updateAllDisplays(); updateMatrixMACs();
-  showToast('All interfaces randomized!','success');
+async function randomizeAll() {
+  const planned = Object.keys(currentMACs)
+    .map(ui => ({ ui, os: ifaceMap[ui], mac: generateCompletelyRandomMAC().toUpperCase() }))
+    .filter(p => p.os);
+  if (!planned.length) return;
+  if (settings.confirmApply && window.macApi) {
+    const ok = await window.macApi.confirm({
+      title: 'Randomize All Interfaces',
+      message: `Generate and apply new random MAC addresses to ${planned.length} interface(s)?`,
+      detail: 'This runs a privileged system command and prompts for your password once.',
+      confirmLabel: 'Randomize All', cancelLabel: 'Cancel'
+    });
+    if (!ok) return;
+  }
+  if (window.macApi && window.macApi.changeMacBatch) {
+    try {
+      const { results } = await window.macApi.changeMacBatch(
+        planned.map(p => ({ iface: p.os, newMac: p.mac }))
+      );
+      const byIface = Object.fromEntries((results || []).map(r => [r.iface, r]));
+      let okCount = 0;
+      for (const p of planned) {
+        if (byIface[p.os] && byIface[p.os].ok) {
+          const old = currentMACs[p.ui];
+          currentMACs[p.ui] = p.mac;
+          addHistory(p.ui, old, p.mac, getVendorName(p.mac), 'Applied');
+          document.getElementById('m-last-' + p.ui).textContent = new Date().toLocaleTimeString();
+          okCount++;
+        }
+      }
+      const failed = planned.length - okCount;
+      updateAllDisplays(); updateMatrixMACs();
+      showToast(
+        failed ? `Randomized ${okCount}/${planned.length} — ${failed} failed` : 'All interfaces randomized!',
+        failed ? 'error' : 'success'
+      );
+    } catch(err) { showToast('Randomize failed: ' + err.message, 'error'); }
+  } else { showToast('Randomize requires Electron runtime', 'error'); }
 }
 
-function restoreAll() {
-  Object.keys(currentMACs).forEach(ui => {
-    const old = currentMACs[ui];
-    currentMACs[ui] = originalMACs[ui];
-    addHistory(ui, old, originalMACs[ui],'Original','Restored');
-  });
-  updateAllDisplays(); updateMatrixMACs();
-  showToast('All interfaces restored to original','success');
+async function restoreAll() {
+  const planned = Object.keys(originalMACs)
+    .map(ui => ({ ui, os: ifaceMap[ui], mac: (originalMACs[ui] || '').toUpperCase() }))
+    .filter(p => p.os && /^([0-9A-F]{2}:){5}[0-9A-F]{2}$/.test(p.mac));
+  if (!planned.length) { showToast('No original MACs recorded', 'error'); return; }
+  if (settings.confirmApply && window.macApi) {
+    const ok = await window.macApi.confirm({
+      title: 'Restore All Interfaces',
+      message: `Restore ${planned.length} interface(s) to their original MAC addresses?`,
+      detail: 'This runs a privileged system command and prompts for your password once.',
+      confirmLabel: 'Restore All', cancelLabel: 'Cancel'
+    });
+    if (!ok) return;
+  }
+  if (window.macApi && window.macApi.changeMacBatch) {
+    try {
+      const { results } = await window.macApi.changeMacBatch(
+        planned.map(p => ({ iface: p.os, newMac: p.mac }))
+      );
+      const byIface = Object.fromEntries((results || []).map(r => [r.iface, r]));
+      let okCount = 0;
+      for (const p of planned) {
+        if (byIface[p.os] && byIface[p.os].ok) {
+          const old = currentMACs[p.ui];
+          currentMACs[p.ui] = p.mac;
+          addHistory(p.ui, old, p.mac, 'Original', 'Restored');
+          okCount++;
+        }
+      }
+      const failed = planned.length - okCount;
+      updateAllDisplays(); updateMatrixMACs();
+      showToast(
+        failed ? `Restored ${okCount}/${planned.length} — ${failed} failed` : 'All interfaces restored to original',
+        failed ? 'error' : 'success'
+      );
+    } catch(err) { showToast('Restore failed: ' + err.message, 'error'); }
+  } else { showToast('Restore requires Electron runtime', 'error'); }
 }
 
 function cloneMAC() {
