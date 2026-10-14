@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MAC Addy Spoofer</title>
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' https://r2cdn.perplexity.ai; connect-src 'none';">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none';">
   <style>
     :root {
       --bg:       #070b14;
@@ -15,7 +15,7 @@
       --border-h: rgba(0, 210, 255, 0.22);
       --text:     #dce8f8;
       --text-sec: rgba(170, 195, 230, 0.6);
-      --text-dim: rgba(130, 160, 200, 0.35);
+      --text-dim: #8a9fb8;
       --accent:   #00d2ff;
       --accent-d: rgba(0, 210, 255, 0.14);
       --accent-g: rgba(0, 210, 255, 0.28);
@@ -73,7 +73,7 @@
       background:linear-gradient(135deg,var(--accent),var(--purple));
       border-radius:10px;
       display:flex;align-items:center;justify-content:center;
-      box-shadow:0 0 18px rgba(0,210,255,.3),0 0 36px rgba(139,92,246,.18);
+      box-shadow:0 2px 10px rgba(0,0,0,.35);
     }
     .brand-mark svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2;}
     .brand-name{font-size:13px;font-weight:700;color:var(--text);letter-spacing:-.01em;}
@@ -102,7 +102,6 @@
     .nav-item.active::after{
       content:"";position:absolute;left:0;top:50%;transform:translateY(-50%);
       width:3px;height:60%;background:var(--accent);border-radius:0 2px 2px 0;
-      box-shadow:0 0 8px var(--accent);
     }
     .nav-item svg{width:15px;height:15px;stroke:currentColor;fill:none;flex-shrink:0;position:relative;}
 
@@ -198,7 +197,7 @@
     .mh-val{
       font-family:var(--mono);font-size:28px;font-weight:700;
       color:#fff;letter-spacing:.08em;
-      text-shadow:0 0 22px rgba(0,210,255,.55),0 0 50px rgba(0,210,255,.2);
+      text-shadow:0 1px 3px rgba(0,0,0,.45);
       margin:8px 0 16px;line-height:1;position:relative;
     }
     .mh-meta{display:flex;gap:22px;flex-wrap:wrap;position:relative;}
@@ -233,6 +232,7 @@
       padding:5px 13px;border-radius:var(--rf);font-size:11px;font-weight:600;
       cursor:pointer;border:1px solid var(--border);background:rgba(255,255,255,.03);
       color:var(--text-sec);transition:all 180ms var(--ease);
+      font-family:var(--font);
     }
     .vendor-chip:hover{border-color:rgba(0,210,255,.22);color:var(--text);background:rgba(0,210,255,.06);}
     .vendor-chip.active{
@@ -277,9 +277,9 @@
     }
     .btn-primary{
       background:linear-gradient(135deg,var(--accent),#0080bb);color:#000;
-      box-shadow:0 0 22px rgba(0,210,255,.26),0 2px 10px rgba(0,0,0,.35);
+      box-shadow:0 2px 10px rgba(0,0,0,.35);
     }
-    .btn-primary:hover{transform:translateY(-1px);box-shadow:0 0 32px rgba(0,210,255,.42),0 4px 18px rgba(0,0,0,.45);}
+    .btn-primary:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,0,0,.45);}
     .btn-primary:active{transform:none;}
     .btn-ghost{
       background:rgba(255,255,255,.04);color:var(--text-sec);
@@ -298,6 +298,24 @@
     .btn-icon:hover{background:rgba(0,210,255,.09);color:var(--accent);border-color:rgba(0,210,255,.22);}
     .btn-icon svg{width:14px;height:14px;stroke:currentColor;fill:none;}
     .btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;}
+    .btn:disabled,.qa-btn:disabled,.toggle:disabled{opacity:.45;cursor:not-allowed;transform:none !important;box-shadow:none !important;}
+    .btn:focus-visible,.qa-btn:focus-visible,.toggle:focus-visible,.iface-tab:focus-visible,
+    .vendor-chip:focus-visible,.filter-chip:focus-visible,.nav-item:focus-visible,.theme-toggle:focus-visible,.btn-icon:focus-visible{
+      outline:2px solid var(--accent);outline-offset:2px;
+    }
+
+    /* ── NOTICE BANNERS (first-run / honesty states) ── */
+    .notice{
+      display:flex;gap:12px;align-items:flex-start;
+      padding:14px 16px;border-radius:var(--r3);margin-bottom:16px;
+      border:1px solid rgba(0,210,255,.22);background:rgba(0,210,255,.05);
+      font-size:12px;line-height:1.6;color:var(--text-sec);
+    }
+    .notice.warn{border-color:rgba(245,158,11,.3);background:rgba(245,158,11,.06);}
+    .notice strong{color:var(--text);}
+    .notice .n-title{font-weight:700;color:var(--text);font-size:13px;margin-bottom:4px;}
+    .notice .n-actions{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;}
+    .notice[hidden]{display:none !important;}
 
     /* ── BADGES ── */
     .badge{
@@ -368,7 +386,7 @@
     .filter-chip{
       padding:5px 13px;border-radius:var(--rf);font-size:11px;font-weight:600;
       cursor:pointer;border:1px solid var(--border);background:rgba(255,255,255,.03);
-      color:var(--text-sec);transition:all 150ms;
+      color:var(--text-sec);transition:all 150ms;font-family:var(--font);
     }
     .filter-chip:hover{border-color:rgba(0,210,255,.22);color:var(--text);}
     .filter-chip.active{background:var(--accent-d);color:var(--accent);border-color:rgba(0,210,255,.3);}
@@ -424,7 +442,7 @@
       width:72px;height:72px;
       background:linear-gradient(135deg,var(--accent),var(--purple));
       border-radius:18px;display:flex;align-items:center;justify-content:center;
-      flex-shrink:0;box-shadow:0 0 32px rgba(0,210,255,.3),0 0 64px rgba(139,92,246,.15);
+      flex-shrink:0;box-shadow:0 4px 18px rgba(0,0,0,.35);
     }
     .about-icon svg{width:38px;height:38px;stroke:#fff;fill:none;}
     .about-name{font-size:22px;font-weight:800;color:var(--text);letter-spacing:-.02em;}
@@ -479,7 +497,7 @@
       --bg:#f0f4fb;--bg2:#e8eef7;
       --surface:rgba(255,255,255,.92);--surface2:rgba(240,245,255,.75);
       --border:rgba(80,130,210,.2);--border-h:rgba(0,150,220,.28);
-      --text:#1a2540;--text-sec:rgba(30,60,120,.72);--text-dim:rgba(80,120,175,.55);
+      --text:#1a2540;--text-sec:rgba(30,60,120,.72);--text-dim:#5b7290;
       --accent:#0088bb;--accent-d:rgba(0,136,187,.12);--accent-g:rgba(0,136,187,.22);
       --ok:#0f9a72;--ok-d:rgba(15,154,114,.12);
       --err:#c83040;--err-d:rgba(200,48,64,.12);
@@ -519,7 +537,7 @@
     html[data-theme="light"] .toast.success{background:rgba(210,255,240,.97);}
     html[data-theme="light"] .toast.error{background:rgba(255,220,222,.97);}
     html[data-theme="light"] .mac-hero{background:linear-gradient(135deg,rgba(0,70,140,.06),rgba(70,20,130,.05));}
-    html[data-theme="light"] .mh-val{color:#1a2540;text-shadow:0 0 22px rgba(0,120,180,.3),0 0 50px rgba(0,120,180,.12);}
+    html[data-theme="light"] .mh-val{color:#1a2540;text-shadow:0 1px 2px rgba(0,0,0,.12);}
     html[data-theme="light"] .about-hero{background:linear-gradient(135deg,rgba(0,120,180,.06),rgba(100,60,200,.05));}
     html[data-theme="light"] .card::before{background:linear-gradient(135deg,rgba(0,120,180,.02) 0%,transparent 50%,rgba(100,60,200,.015) 100%);}
     html[data-theme="light"] .ring-bg{stroke:rgba(0,0,0,.08);}
@@ -556,30 +574,30 @@
       </div>
       <div>
         <div class="brand-name">MAC Addy Spoofer</div>
-        <div class="brand-ver">v1.0.0</div>
+        <div class="brand-ver" id="brandVer">v1.0.0</div>
       </div>
     </div>
 
-    <ul class="sb-nav" id="sidebarNav">
+    <ul class="sb-nav" id="sidebarNav" role="navigation" aria-label="Main navigation">
       <div class="nav-sect">Main</div>
-      <li class="nav-item active" data-view="dashboard">
+      <li class="nav-item active" data-view="dashboard" tabindex="0" role="button" aria-label="Dashboard">
         <svg viewBox="0 0 24 24" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
         Dashboard
       </li>
-      <li class="nav-item" data-view="automation">
+      <li class="nav-item" data-view="automation" tabindex="0" role="button" aria-label="Automation">
         <svg viewBox="0 0 24 24" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
         Automation
       </li>
-      <li class="nav-item" data-view="history">
+      <li class="nav-item" data-view="history" tabindex="0" role="button" aria-label="History">
         <svg viewBox="0 0 24 24" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
         History
       </li>
       <div class="nav-sect">System</div>
-      <li class="nav-item" data-view="settings">
+      <li class="nav-item" data-view="settings" tabindex="0" role="button" aria-label="Settings">
         <svg viewBox="0 0 24 24" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
         Settings
       </li>
-      <li class="nav-item" data-view="about">
+      <li class="nav-item" data-view="about" tabindex="0" role="button" aria-label="About">
         <svg viewBox="0 0 24 24" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
         About &amp; Support
       </li>
@@ -591,7 +609,7 @@
           <div class="sdot" id="timerDot"></div>
           <span id="timerChipText">Timer inactive</span>
         </div>
-        <button class="theme-toggle" id="themeToggleBtn" onclick="toggleTheme()" title="Toggle Day/Night Mode">
+        <button class="theme-toggle" id="themeToggleBtn" onclick="toggleTheme()" title="Toggle Day/Night Mode" aria-label="Toggle day/night mode">
           <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
         </button>
       </div>
@@ -612,13 +630,36 @@
           </div>
         </div>
         <div class="topbar-actions">
-          <button class="btn-icon" onclick="copyMAC()" title="Copy MAC"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
-          <button class="btn-icon" onclick="exportHistory()" title="Export CSV"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
-          <button class="btn-icon" onclick="saveConfig()" title="Save Config"><svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></button>
-          <button class="btn-icon" onclick="loadConfig()" title="Load Config"><svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></button>
+          <button class="btn-icon" onclick="copyMAC()" title="Copy MAC" aria-label="Copy current MAC address"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+          <button class="btn-icon" onclick="exportHistory()" title="Export CSV" aria-label="Export history to CSV"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+          <button class="btn-icon" onclick="saveConfig()" title="Save Config" aria-label="Save configuration"><svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></button>
+          <button class="btn-icon" onclick="loadConfig()" title="Load Config" aria-label="Load configuration"><svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></button>
         </div>
       </div>
       <div class="vbody">
+
+        <!-- First-run onboarding (dismissed once; honest explainer) -->
+        <div class="notice" id="onboardCard" hidden>
+          <div style="flex:1;">
+            <div class="n-title">How MAC Addy Spoofer works</div>
+            <div>This utility changes your network interface's MAC address — the hardware identifier your device shows to local networks — for privacy. Applying a change runs a privileged system command, so macOS asks for your <strong>administrator password each time</strong> (one prompt covers a whole batch). Changes are temporary and revert when you reboot. Everything runs on your device: no accounts, no network calls, no telemetry. Developed by SOURI APPS LLC.</div>
+            <div class="n-actions">
+              <button class="btn btn-primary btn-sm" onclick="dismissOnboarding()">Got it</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Shown when interface reads all fail instead of fake MACs -->
+        <div class="notice warn" id="readFailBanner" hidden>
+          <div style="flex:1;">
+            <div class="n-title">Couldn't read your interfaces</div>
+            <div>None of the configured interfaces returned a MAC address. Check that the interface names in Settings match your Mac (usually <strong>en0</strong> for Wi-Fi), then press Refresh.</div>
+            <div class="n-actions">
+              <button class="btn btn-ghost btn-sm" onclick="navigateTo('settings')">Open Settings</button>
+              <button class="btn btn-ghost btn-sm" onclick="refreshAllMACs()">Retry</button>
+            </div>
+          </div>
+        </div>
 
         <!-- Interface Tabs -->
         <div class="iface-tabs" id="ifaceTabs">
@@ -641,14 +682,15 @@
           <div class="mh-top">
             <div>
               <div class="mh-label">Current MAC Address</div>
+              <div class="badge badge-warn" id="pendingApplyBadge" style="display:none;margin-top:6px;" role="status"><span class="bdot"></span>Pending — not applied</div>
             </div>
             <span class="badge badge-success" id="ifaceStatusBadge"><span class="bdot"></span>Active</span>
           </div>
-          <div class="mh-val" id="currentMACDisplay">--:--:--:--:--:--</div>
+          <div class="mh-val" id="currentMACDisplay">—</div>
           <div class="mh-meta">
             <div class="mh-meta-item">
               <span class="mh-meta-lbl">Original</span>
-              <span class="mh-meta-val" id="originalMACDisplay">Loading…</span>
+              <span class="mh-meta-val" id="originalMACDisplay">—</span>
             </div>
             <div class="mh-meta-item">
               <span class="mh-meta-lbl">Interface</span>
@@ -660,11 +702,19 @@
             </div>
           </div>
           <div class="mh-actions" style="position:absolute;top:22px;right:22px;">
-            <button class="btn btn-ghost btn-sm" onclick="refreshMAC()">
+            <button class="btn btn-ghost btn-sm" id="btnRefresh" onclick="refreshMAC()" aria-label="Refresh MAC from system">
               <svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;"><path d="M3 2v6h6"/><path d="M3 13a9 9 0 1 0 3-7.7L3 8"/></svg>
               Refresh
             </button>
-            <button class="btn btn-ghost btn-sm" onclick="restoreOriginal()">Restore</button>
+            <button class="btn btn-ghost btn-sm" id="btnRestoreHero" onclick="restoreOriginal()">Restore</button>
+          </div>
+        </div>
+
+        <!-- Bluetooth honesty notice (shown only on the Bluetooth tab) -->
+        <div class="notice warn" id="btNotice" hidden>
+          <div style="flex:1;">
+            <div class="n-title">Bluetooth isn't spoofable on modern macOS</div>
+            <div>Bluetooth isn't configurable through the system network interface, so MAC changes can't be applied to it. This tab is informational only — Wi-Fi and Ethernet support full spoofing.</div>
           </div>
         </div>
 
@@ -679,30 +729,22 @@
             </div>
             <div class="form-group">
               <label class="form-label">Vendor Preset</label>
-              <div class="vendor-chips" id="vendorChips">
-                <span class="vendor-chip active" data-vendor="random" data-prefix="">Random</span>
-                <span class="vendor-chip" data-vendor="apple" data-prefix="00:1B:44">Apple</span>
-                <span class="vendor-chip" data-vendor="intel" data-prefix="00:50:F2">Intel</span>
-                <span class="vendor-chip" data-vendor="cisco" data-prefix="00:00:0C">Cisco</span>
-                <span class="vendor-chip" data-vendor="dell" data-prefix="00:1A:A0">Dell</span>
-                <span class="vendor-chip" data-vendor="hp" data-prefix="00:24:E8">HP</span>
-                <span class="vendor-chip" data-vendor="samsung" data-prefix="00:1D:09">Samsung</span>
-                <span class="vendor-chip" data-vendor="vmware" data-prefix="00:50:56">VMware</span>
+              <div class="vendor-chips" id="vendorChips" role="group" aria-label="Vendor preset">
               </div>
             </div>
             <div class="form-group">
               <label class="form-label">MAC Address</label>
               <div class="input-group">
-                <input class="mac-input" type="text" id="macInput" placeholder="00:1A:2B:3C:4D:5E" maxlength="17" oninput="validateMACInput(this)">
-                <button class="btn btn-ghost btn-sm" onclick="generateRandomMAC()">Generate</button>
+                <input class="mac-input" type="text" id="macInput" placeholder="00:1A:2B:3C:4D:5E" maxlength="17" oninput="validateMACInput(this)" aria-label="MAC address to apply">
+                <button class="btn btn-ghost btn-sm" id="btnGenerate" onclick="generateRandomMAC()">Generate</button>
               </div>
             </div>
             <div class="btn-row">
-              <button class="btn btn-primary" onclick="applyMAC()">
+              <button class="btn btn-primary" id="btnApply" onclick="applyMAC()">
                 <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                 Apply MAC
               </button>
-              <button class="btn btn-ghost" onclick="restoreOriginal()">Restore Original</button>
+              <button class="btn btn-ghost" id="btnRestoreCard" onclick="restoreOriginal()">Restore Original</button>
             </div>
           </div>
 
@@ -715,11 +757,11 @@
               </div>
             </div>
             <div class="qa-grid">
-              <button class="qa-btn" onclick="randomizeAll()">
+              <button class="qa-btn" id="btnRandomizeAll" onclick="randomizeAll()">
                 <div class="qa-ico"><svg viewBox="0 0 24 24"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg></div>
                 <span class="qa-label">Randomize All Interfaces</span>
               </button>
-              <button class="qa-btn" onclick="restoreAll()">
+              <button class="qa-btn" id="btnRestoreAll" onclick="restoreAll()">
                 <div class="qa-ico"><svg viewBox="0 0 24 24"><path d="M3 2v6h6"/><path d="M3 13a9 9 0 1 0 3-7.7L3 8"/></svg></div>
                 <span class="qa-label">Restore All Original</span>
               </button>
@@ -777,7 +819,7 @@
 
           <div class="two-col">
             <div class="form-group">
-              <label class="form-label">Randomization Interval</label>
+              <label class="form-label" for="timerIntervalSel">Randomization Interval</label>
               <select class="select-control" id="timerIntervalSel" onchange="updateTimerPreview()">
                 <option value="0">Disabled</option>
                 <option value="30">Every 30 minutes</option>
@@ -790,16 +832,17 @@
               </select>
             </div>
             <div class="form-group">
-              <label class="form-label">Vendor for Auto-Randomization</label>
+              <label class="form-label" for="autoVendorSel">Vendor for Auto-Randomization</label>
               <select class="select-control" id="autoVendorSel">
-                <option value="random">Random Vendor</option>
-                <option value="apple">Apple Inc.</option>
-                <option value="intel">Intel Corporation</option>
-                <option value="cisco">Cisco Systems</option>
-                <option value="dell">Dell Inc.</option>
-                <option value="hp">HP Inc.</option>
               </select>
             </div>
+          </div>
+          <div class="setting-row" style="border:1px solid var(--border);border-radius:var(--r2);margin-bottom:16px;background:rgba(6,12,26,.5);">
+            <div>
+              <div class="setting-lbl">Apply real changes on each rotation</div>
+              <div class="setting-desc">Each rotation performs a real privileged MAC change — macOS will show an administrator password prompt. If you dismiss the prompt, that tick is skipped and the schedule keeps running.</div>
+            </div>
+            <button class="toggle" id="tog-timer-apply" role="switch" aria-checked="false" aria-label="Apply real MAC changes on each rotation" onclick="toggleTimerApply(this)"></button>
           </div>
           <button class="btn btn-primary" id="timerToggleBtn" onclick="toggleTimer()">
             <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;"><polygon points="5 3 19 12 5 21 5 3"/></svg>
@@ -823,21 +866,21 @@
             <tbody id="ifaceMatrixBody">
               <tr>
                 <td class="lbl">Wi-Fi</td><td id="m-en0">en0</td>
-                <td><button class="toggle on" id="tog-WiFi" onclick="toggleIfaceInclude(this,'WiFi')"></button></td>
+                <td><button class="toggle on" id="tog-WiFi" aria-pressed="true" aria-label="Include Wi-Fi in automation" onclick="toggleIfaceInclude(this,'WiFi')"></button></td>
                 <td id="m-last-WiFi" style="color:var(--text-sec);">—</td>
-                <td id="m-mac-WiFi" class="mono">Loading…</td>
+                <td id="m-mac-WiFi" class="mono">—</td>
               </tr>
               <tr>
                 <td class="lbl">Ethernet</td><td id="m-en1">en1</td>
-                <td><button class="toggle on" id="tog-Ethernet" onclick="toggleIfaceInclude(this,'Ethernet')"></button></td>
+                <td><button class="toggle on" id="tog-Ethernet" aria-pressed="true" aria-label="Include Ethernet in automation" onclick="toggleIfaceInclude(this,'Ethernet')"></button></td>
                 <td id="m-last-Ethernet" style="color:var(--text-sec);">—</td>
-                <td id="m-mac-Ethernet" class="mono">Loading…</td>
+                <td id="m-mac-Ethernet" class="mono">—</td>
               </tr>
               <tr>
                 <td class="lbl">Bluetooth</td><td id="m-en2">en2</td>
-                <td><button class="toggle" id="tog-Bluetooth" onclick="toggleIfaceInclude(this,'Bluetooth')"></button></td>
+                <td><button class="toggle" id="tog-Bluetooth" disabled title="Bluetooth MAC changes are restricted on modern macOS" aria-label="Include Bluetooth in automation (unavailable)"></button></td>
                 <td id="m-last-Bluetooth" style="color:var(--text-sec);">—</td>
-                <td id="m-mac-Bluetooth" class="mono">Loading…</td>
+                <td id="m-mac-Bluetooth" class="mono">—</td>
               </tr>
             </tbody>
           </table>
@@ -861,15 +904,18 @@
         </div>
       </div>
       <div class="vbody">
-        <div class="filter-row" id="histFilterRow">
-          <span class="filter-chip active" data-filter="all" onclick="filterHistory(this)">All</span>
-          <span class="filter-chip" data-filter="WiFi" onclick="filterHistory(this)">Wi-Fi</span>
-          <span class="filter-chip" data-filter="Ethernet" onclick="filterHistory(this)">Ethernet</span>
-          <span class="filter-chip" data-filter="Bluetooth" onclick="filterHistory(this)">Bluetooth</span>
-          <span class="filter-chip" data-filter="Applied" onclick="filterHistory(this)">Applied</span>
-          <span class="filter-chip" data-filter="Restored" onclick="filterHistory(this)">Restored</span>
+        <div class="filter-row" id="histFilterRow" role="group" aria-label="History filters">
+          <button type="button" class="filter-chip active" data-filter="all" onclick="filterHistory(this)">All</button>
+          <button type="button" class="filter-chip" data-filter="WiFi" onclick="filterHistory(this)">Wi-Fi</button>
+          <button type="button" class="filter-chip" data-filter="Ethernet" onclick="filterHistory(this)">Ethernet</button>
+          <button type="button" class="filter-chip" data-filter="Bluetooth" onclick="filterHistory(this)">Bluetooth</button>
+          <button type="button" class="filter-chip" data-filter="Applied" onclick="filterHistory(this)">Applied</button>
+          <button type="button" class="filter-chip" data-filter="Restored" onclick="filterHistory(this)">Restored</button>
+          <button type="button" class="filter-chip" data-filter="Skipped" onclick="filterHistory(this)">Skipped</button>
+          <button type="button" class="filter-chip" data-filter="Failed" onclick="filterHistory(this)">Failed</button>
         </div>
         <div class="card" style="padding:0;overflow:hidden;">
+          <div style="padding:12px 20px 0;font-size:11px;color:var(--text-dim);" id="histCountNote" role="status"></div>
           <table class="data-table">
             <thead>
               <tr>
@@ -917,15 +963,15 @@
             <div class="sect-lbl">Behavior</div>
             <div class="setting-row">
               <div><div class="setting-lbl">Confirm before applying MAC</div><div class="setting-desc">Show confirmation dialog before OS-level change</div></div>
-              <button class="toggle on" id="tog-confirm" onclick="this.classList.toggle('on');settings.confirmApply=this.classList.contains('on');"></button>
+              <button class="toggle on" id="tog-confirm" aria-pressed="true" aria-label="Confirm before applying MAC" onclick="toggleSetting(this,'confirmApply')"></button>
             </div>
             <div class="setting-row">
               <div><div class="setting-lbl">Remember last vendor per interface</div><div class="setting-desc">Restore vendor selection when switching interfaces</div></div>
-              <button class="toggle on" id="tog-remvendor" onclick="this.classList.toggle('on');"></button>
+              <button class="toggle on" id="tog-remvendor" aria-pressed="true" aria-label="Remember last vendor per interface" onclick="toggleSetting(this,'rememberVendor')"></button>
             </div>
             <div class="setting-row">
               <div><div class="setting-lbl">Show toast notifications</div><div class="setting-desc">Non-intrusive notifications instead of alert dialogs</div></div>
-              <button class="toggle on" id="tog-toasts" onclick="this.classList.toggle('on');settings.useToasts=this.classList.contains('on');"></button>
+              <button class="toggle on" id="tog-toasts" aria-pressed="true" aria-label="Show toast notifications" onclick="toggleSetting(this,'useToasts')"></button>
             </div>
           </div>
           <div class="btn-row">
@@ -955,7 +1001,7 @@
             </div>
             <div>
               <div class="about-name">MAC Addy Spoofer</div>
-              <div class="about-ver">v1.0.0 &nbsp;&middot;&nbsp; macOS</div>
+              <div class="about-ver" id="aboutVer">v1.0.0 &nbsp;&middot;&nbsp; macOS</div>
               <div class="about-dev">Developer: Souriya "Bobby" Vongchanh</div>
             </div>
           </div>
@@ -1015,13 +1061,15 @@
           </div>
           <div id="legal-faq" class="legal-content">
             <h3>Why does Apply MAC fail?</h3>
-            <p>MAC changes require root/sudo privileges. The app calls <code>mac-changer-macos.sh</code>. Run it once manually with sudo from Terminal to confirm it works.</p>
+            <p>Applying a MAC runs a privileged system command through a macOS administrator prompt — no Terminal or sudo setup needed. If you cancel the password dialog, nothing changes. If a change is applied but the read-back doesn't match, check that the interface name in Settings matches your Mac (usually <code>en0</code> for Wi-Fi) and that the interface is up.</p>
             <h3>Why doesn't the app detect my real MAC?</h3>
             <p>The app reads MACs via <code>ifconfig</code> through Electron IPC. Ensure interface names in Settings match your Mac's actual IDs (usually en0 for Wi-Fi).</p>
             <h3>Will MAC changes persist after reboot?</h3>
             <p>On macOS, changes made via <code>ifconfig</code> are temporary and revert on reboot. This is by design.</p>
-            <h3>How do I set up sudo access?</h3>
-            <p>Add a sudoers entry: <code>username ALL=(root) NOPASSWD: /path/to/scripts/mac-changer-macos.sh</code></p>
+            <h3>Why does the timer ask for my password?</h3>
+            <p>Each timer rotation performs a real MAC change, so macOS shows the administrator prompt once per rotation. Dismissing the prompt skips that rotation; the schedule keeps running.</p>
+            <h3>Can I change my Bluetooth MAC?</h3>
+            <p>No — Bluetooth MAC changes are restricted on modern macOS. The Bluetooth tab is informational only.</p>
           </div>
         </div>
       </div>
@@ -1032,8 +1080,8 @@
 
 <!-- ── Clone MAC Modal ── -->
 <div class="modal-overlay hidden" id="cloneModalOverlay" onclick="if(event.target===this)closeCloneModal()">
-  <div class="modal-box">
-    <div class="modal-title">Clone MAC Address</div>
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="cloneModalTitle">
+    <div class="modal-title" id="cloneModalTitle">Clone MAC Address</div>
     <div class="modal-desc">Enter the MAC address you want to clone onto <strong id="cloneIfaceLabel">this interface</strong>. This will populate the MAC field — click Apply MAC to apply it to the OS.</div>
     <div class="form-group" style="margin-bottom:0;">
       <label class="form-label">Target MAC Address</label>
@@ -1062,23 +1110,37 @@ let selectedIface = 'WiFi';
 let timerActive = false;
 let timerHandle = null;
 let changeHistory = [];
+const HISTORY_CAP = 500; // in-memory cap — oldest entries are dropped
 let autoIfaceInclude = {WiFi:true,Ethernet:true,Bluetooth:false};
+let timerAutoApply = false; // explicit opt-in: timer ticks perform real privileged changes
+let opBusy = false; // re-entrancy guard: a privileged op is in flight
 
 const ifaceMap = { WiFi:'en0', Ethernet:'en1', Bluetooth:'en2' };
 
-let originalMACs = {
-  WiFi:'00:1A:2B:3C:4D:5E',
-  Ethernet:'08:00:27:AB:CD:EF',
-  Bluetooth:'00:11:22:33:44:55'
-};
-let currentMACs = {...originalMACs};
+// MAC state starts UNKNOWN (null) — never present invented addresses as fact.
+// Real values fill in via ifconfig reads on startup/refresh.
+let originalMACs = { WiFi:null, Ethernet:null, Bluetooth:null };
+let currentMACs = { WiFi:null, Ethernet:null, Bluetooth:null };
 
-const vendorPrefixes = {
-  apple:'00:1B:44',intel:'00:50:F2',cisco:'00:00:0C',
-  dell:'00:1A:A0',hp:'00:24:E8',samsung:'00:1D:09',
-  vmware:'00:50:56',microsoft:'00:15:5D',lenovo:'00:26:B9',
-  google:'00:1C:42',raspberry:'B8:27:EB',oracle:'08:00:27'
-};
+// ── Canonical vendor taxonomy ──
+// Single source of truth for the dashboard chips, the automation dropdown, and
+// generation prefixes. Hero/history names resolve OUIs through vendorMap/getVendorName.
+const VENDORS = [
+  { key:'random',    name:'Random',       prefix:'' },
+  { key:'apple',     name:'Apple',        prefix:'00:1B:44' },
+  { key:'intel',     name:'Intel',        prefix:'00:50:F2' },
+  { key:'cisco',     name:'Cisco',        prefix:'00:00:0C' },
+  { key:'dell',      name:'Dell',         prefix:'00:1A:A0' },
+  { key:'hp',        name:'HP',           prefix:'00:24:E8' },
+  { key:'samsung',   name:'Samsung',      prefix:'00:1D:09' },
+  { key:'vmware',    name:'VMware',       prefix:'00:50:56' },
+  { key:'microsoft', name:'Microsoft',    prefix:'00:15:5D' },
+  { key:'lenovo',    name:'Lenovo',       prefix:'00:26:B9' },
+  { key:'google',    name:'Google',       prefix:'00:1C:42' },
+  { key:'raspberry', name:'Raspberry Pi', prefix:'B8:27:EB' },
+];
+// Lookup by vendor key (used by the timer + vendor memory).
+const vendorPrefixes = Object.fromEntries(VENDORS.filter(v => v.prefix).map(v => [v.key, v.prefix]));
 
 const vendorMap = {
   '00:00:0C':'Cisco Systems','00:1B:44':'Apple Inc.','00:50:56':'VMware Inc.',
@@ -1090,7 +1152,8 @@ const vendorMap = {
   '00:24:D7':'Espressif'
 };
 
-let settings = {confirmApply:true,useToasts:true};
+let settings = {confirmApply:true,useToasts:true,rememberVendor:true};
+let vendorMemory = {}; // per-interface vendor chip key, persisted in localStorage
 
 // ── Init ──
 window.addEventListener('DOMContentLoaded', async () => {
@@ -1104,20 +1167,81 @@ window.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('set-wifi').value = ifaceMap.WiFi;
     document.getElementById('set-eth').value = ifaceMap.Ethernet;
     document.getElementById('set-bt').value = ifaceMap.Bluetooth;
+    const vm = localStorage.getItem('macaddy-vendor-memory');
+    if (vm) vendorMemory = JSON.parse(vm) || {};
+    timerAutoApply = localStorage.getItem('macaddy-timer-apply') === '1';
   } catch(e) {}
 
+  // Canonical vendor taxonomy → dashboard chips + automation dropdown.
+  document.getElementById('vendorChips').innerHTML = VENDORS.map(v =>
+    `<button type="button" class="vendor-chip${v.key==='random'?' active':''}" data-vendor="${v.key}" data-prefix="${v.prefix}" aria-pressed="${v.key==='random'}">${v.name}</button>`
+  ).join('');
+  document.getElementById('autoVendorSel').innerHTML = VENDORS.map(v =>
+    `<option value="${v.key}">${v.key==='random'?'Random Vendor':v.name}</option>`
+  ).join('');
+
+  // Sync toggle visuals with persisted settings.
+  setToggle(document.getElementById('tog-confirm'), !!settings.confirmApply);
+  setToggle(document.getElementById('tog-remvendor'), !!settings.rememberVendor);
+  setToggle(document.getElementById('tog-toasts'), !!settings.useToasts);
+  setToggle(document.getElementById('tog-timer-apply'), timerAutoApply);
+  setToggle(document.getElementById('tog-WiFi'), !!autoIfaceInclude.WiFi);
+  setToggle(document.getElementById('tog-Ethernet'), !!autoIfaceInclude.Ethernet);
+
+  // First-run onboarding explainer (once).
+  try {
+    if (!localStorage.getItem('macaddy-onboarded')) {
+      document.getElementById('onboardCard').hidden = false;
+    }
+  } catch(e) {}
+
+  // Parallel interface reads (independent IPC calls) — placeholders stay "—"
+  // until real values resolve; nothing is ever seeded with fake MACs.
   if (window.macApi && window.macApi.getCurrentMac) {
-    for (const ui of Object.keys(ifaceMap)) {
-      const os = ifaceMap[ui];
+    const reads = Object.entries(ifaceMap).map(async ([ui, os]) => {
       try {
         const mac = await window.macApi.getCurrentMac(os);
-        if (mac) { originalMACs[ui] = mac; currentMACs[ui] = mac; }
+        if (mac) { originalMACs[ui] = mac; currentMACs[ui] = mac; return true; }
       } catch(e) { console.warn('MAC read failed for', os, e.message); }
-    }
+      return false;
+    });
+    const results = await Promise.allSettled(reads);
+    const anyOk = results.some(r => r.status === 'fulfilled' && r.value);
+    document.getElementById('readFailBanner').hidden = anyOk;
+  } else {
+    document.getElementById('readFailBanner').hidden = false;
   }
   updateAllDisplays();
   updateMatrixMACs();
+
+  // App version, data-driven when the main-process bridge is available.
+  try {
+    const v = (window.macaddy && typeof window.macaddy.getVersion === 'function')
+      ? await window.macaddy.getVersion() : null;
+    if (v) {
+      document.getElementById('brandVer').textContent = 'v' + v;
+      document.getElementById('aboutVer').innerHTML = 'v' + v + ' &nbsp;&middot;&nbsp; macOS';
+    }
+  } catch(e) { /* keep the hardcoded fallback labels */ }
 });
+
+function dismissOnboarding() {
+  document.getElementById('onboardCard').hidden = true;
+  try { localStorage.setItem('macaddy-onboarded', '1'); } catch(e) {}
+}
+
+async function refreshAllMACs() {
+  if (!(window.macApi && window.macApi.getCurrentMac)) return;
+  let anyOk = false;
+  for (const [ui, os] of Object.entries(ifaceMap)) {
+    try {
+      const mac = await window.macApi.getCurrentMac(os);
+      if (mac) { originalMACs[ui] = mac; currentMACs[ui] = mac; anyOk = true; }
+    } catch(e) {}
+  }
+  document.getElementById('readFailBanner').hidden = anyOk;
+  updateAllDisplays(); updateMatrixMACs();
+}
 
 // ── Navigation ──
 document.getElementById('sidebarNav').addEventListener('click', e => {
@@ -1129,50 +1253,120 @@ document.getElementById('sidebarNav').addEventListener('click', e => {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.getElementById('view-'+view).classList.add('active');
 });
+document.getElementById('sidebarNav').addEventListener('keydown', e => {
+  if (e.key !== 'Enter' && e.key !== ' ') return;
+  const item = e.target.closest('.nav-item');
+  if (!item) return;
+  e.preventDefault();
+  item.click();
+});
 
 // ── Interface Tabs ──
 document.getElementById('ifaceTabs').addEventListener('click', e => {
   const tab = e.target.closest('.iface-tab');
   if (!tab) return;
-  document.querySelectorAll('.iface-tab').forEach(t => t.classList.remove('active'));
-  tab.classList.add('active');
-  selectedIface = tab.dataset.iface;
-  updateAllDisplays();
+  selectIfaceTab(tab.dataset.iface);
 });
+function selectIfaceTab(ui) {
+  document.querySelectorAll('.iface-tab').forEach(t => t.classList.toggle('active', t.dataset.iface === ui));
+  selectedIface = ui;
+  // Restore the remembered vendor chip for this interface (no regeneration —
+  // it only sets the active chip; the field keeps the verified current MAC).
+  if (settings.rememberVendor && vendorMemory[ui]) activateVendorChip(vendorMemory[ui], false);
+  updateAllDisplays();
+}
 
-// ── Vendor Chips ──
+// ── Vendor Chips (rendered from VENDORS on init) ──
+function activateVendorChip(key, generate) {
+  document.querySelectorAll('.vendor-chip').forEach(c => {
+    const on = c.dataset.vendor === key;
+    c.classList.toggle('active', on);
+    c.setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
+  if (generate) {
+    const chip = document.querySelector('.vendor-chip.active');
+    const prefix = chip ? chip.dataset.prefix : '';
+    const input = document.getElementById('macInput');
+    input.value = prefix ? prefix + ':' + randSuffix() : generateCompletelyRandomMAC();
+    validateMACInput(input);
+  }
+}
 document.getElementById('vendorChips').addEventListener('click', e => {
   const chip = e.target.closest('.vendor-chip');
   if (!chip) return;
-  document.querySelectorAll('.vendor-chip').forEach(c => c.classList.remove('active'));
-  chip.classList.add('active');
-  const prefix = chip.dataset.prefix;
-  if (prefix) {
-    const mac = prefix+':'+randSuffix();
-    document.getElementById('macInput').value = mac;
-    validateMACInput(document.getElementById('macInput'));
-  } else {
-    document.getElementById('macInput').value = generateCompletelyRandomMAC();
-    validateMACInput(document.getElementById('macInput'));
+  activateVendorChip(chip.dataset.vendor, true);
+  if (settings.rememberVendor) {
+    vendorMemory[selectedIface] = chip.dataset.vendor;
+    try { localStorage.setItem('macaddy-vendor-memory', JSON.stringify(vendorMemory)); } catch(err) {}
   }
 });
 
 // ── Display Updates ──
+// The hero ALWAYS shows the last verified MAC (currentMACs only changes after a
+// successful apply + read-back). Generated-but-unapplied values live in the
+// input field and surface as a "Pending — not applied" badge instead.
 function updateAllDisplays() {
-  const mac = currentMACs[selectedIface]||'--:--:--:--:--:--';
-  const orig = originalMACs[selectedIface]||'—';
+  const mac = currentMACs[selectedIface] || '—';
+  const orig = originalMACs[selectedIface] || '—';
   document.getElementById('currentMACDisplay').textContent = mac;
   document.getElementById('originalMACDisplay').textContent = orig;
-  document.getElementById('ifaceOSName').textContent = ifaceMap[selectedIface]||'—';
+  document.getElementById('ifaceOSName').textContent = ifaceMap[selectedIface] || '—';
   document.getElementById('currentVendorDisplay').textContent = getVendorName(mac);
-  document.getElementById('macInput').value = mac;
+  const input = document.getElementById('macInput');
+  input.value = currentMACs[selectedIface] || '';
+  refreshPendingBadge();
+  refreshIfaceBadge();
+  setBluetoothUiDisabled(selectedIface === 'Bluetooth');
+  validateMACInput(input);
+}
+
+// "Pending apply" badge: visible when the input holds a value that differs from
+// the verified current MAC (e.g. after Generate or Clone).
+function refreshPendingBadge() {
+  const input = document.getElementById('macInput');
+  const typed = (input.value || '').toUpperCase();
+  const verified = (currentMACs[selectedIface] || '').toUpperCase();
+  const show = typed.length === 17 && verified.length === 17 && typed !== verified;
+  document.getElementById('pendingApplyBadge').style.display = show ? '' : 'none';
+}
+
+// Live status badge from the real net:testConnection IPC state (unprivileged
+// ifconfig read). Never a hardcoded "Active".
+let badgeGen = 0;
+async function refreshIfaceBadge() {
+  const myGen = ++badgeGen;
   const badge = document.getElementById('ifaceStatusBadge');
+  const set = (cls, label) => {
+    if (myGen !== badgeGen) return; // stale — user switched tabs meanwhile
+    badge.className = 'badge ' + cls;
+    badge.innerHTML = '<span class="bdot"></span>' + label;
+  };
   if (selectedIface === 'Bluetooth') {
-    badge.className='badge badge-error'; badge.innerHTML='<span class="bdot"></span>Inactive';
-  } else {
-    badge.className='badge badge-success'; badge.innerHTML='<span class="bdot"></span>Active';
+    set('badge-error', 'Not supported');
+    document.getElementById('btNotice').hidden = false;
+    return;
   }
-  validateMACInput(document.getElementById('macInput'));
+  document.getElementById('btNotice').hidden = true;
+  if (!(window.macApi && window.macApi.testConnection)) { set('badge-warn', 'Unknown'); return; }
+  set('badge-warn', 'Checking…');
+  try {
+    const r = await window.macApi.testConnection(ifaceMap[selectedIface]);
+    if (!r) { set('badge-warn', 'Unknown'); return; }
+    if (r.status === 'Connected') set('badge-success', 'Connected');
+    else if (/^Up —/.test(r.status)) set('badge-warn', r.status);
+    else set('badge-error', r.status === 'Interface not found' ? 'Not found' : 'Down');
+  } catch(e) { set('badge-warn', 'Unknown'); }
+}
+
+// Bluetooth tab: informational only — disable apply-path controls with context.
+function setBluetoothUiDisabled(disabled) {
+  for (const id of ['btnApply', 'btnGenerate', 'btnRestoreHero', 'btnRestoreCard']) {
+    const el = document.getElementById(id);
+    if (el) {
+      el.disabled = disabled;
+      el.title = disabled ? 'Bluetooth MAC changes are restricted on modern macOS' : '';
+    }
+  }
 }
 
 function updateMatrixMACs() {
@@ -1185,15 +1379,26 @@ function updateMatrixMACs() {
 // ── MAC Helpers ──
 function randByte(){ return Math.floor(Math.random()*256).toString(16).padStart(2,'0').toUpperCase(); }
 function randSuffix(){ return randByte()+':'+randByte()+':'+randByte(); }
-function generateCompletelyRandomMAC(){ return [randByte(),randByte(),randByte(),randByte(),randByte(),randByte()].join(':'); }
+// First octet of a fully-random MAC: set the locally-administered (U/L) bit
+// and clear the multicast (I/G) bit, so we never spoof a multicast address or a
+// globally-unique-looking OUI. Vendor-prefix paths keep the real OUI intact
+// (that's the point of vendor spoofing) and only randomize the suffix.
+function localAdminByte(){
+  const b = Math.floor(Math.random()*256);
+  return (((b & 0xFE) | 0x02).toString(16).padStart(2,'0')).toUpperCase();
+}
+function generateCompletelyRandomMAC(){ return [localAdminByte(),randByte(),randByte(),randByte(),randByte(),randByte()].join(':'); }
 
 function generateRandomMAC() {
   const active = document.querySelector('.vendor-chip.active');
   const prefix = active ? active.dataset.prefix : '';
   const mac = prefix ? prefix+':'+randSuffix() : generateCompletelyRandomMAC();
-  document.getElementById('macInput').value = mac;
-  document.getElementById('currentMACDisplay').textContent = mac;
-  validateMACInput(document.getElementById('macInput'));
+  const input = document.getElementById('macInput');
+  input.value = mac;
+  // NOTE: the hero is never written here — it keeps showing the last VERIFIED
+  // MAC. The pending badge (refreshed by validateMACInput) marks this as
+  // generated-but-not-applied.
+  validateMACInput(input);
 }
 
 function validateMACInput(el) {
@@ -1201,23 +1406,116 @@ function validateMACInput(el) {
   const ok = /^([0-9A-Fa-f]{2}[:-]){5}[0-9A-Fa-f]{2}$/.test(v);
   el.classList.toggle('valid', ok && v.length===17);
   el.classList.toggle('invalid', v.length===17 && !ok);
+  refreshPendingBadge();
   return ok;
 }
 
 function getVendorName(mac) {
-  if (!mac||mac==='--:--:--:--:--:--') return '—';
+  if (!mac || !/^([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}$/.test(mac)) return '—';
   const p = mac.substring(0,8).toUpperCase();
   return vendorMap[p]||'Unknown Vendor';
 }
 
+// Prefer the chosen vendor preset's name when the MAC starts with its prefix,
+// so hero/chips/history agree; fall back to the OUI lookup.
+function vendorNameFor(mac) {
+  const active = document.querySelector('.vendor-chip.active');
+  const prefix = active ? active.dataset.prefix : '';
+  if (prefix && mac.toUpperCase().startsWith(prefix.toUpperCase())) {
+    const v = VENDORS.find(x => x.key === active.dataset.vendor);
+    if (v) return v.name;
+  }
+  return getVendorName(mac);
+}
+
+// ── Privileged-op plumbing (re-entrancy + honest batch results) ──
+// The main process surfaces an admin-prompt cancel/dismiss as an error whose
+// message matches -128/cancelled — treat it as a deliberate skip, not a failure.
+function isUserCancel(err) {
+  return /(-128|cancelled|canceled)/i.test((err && err.message) || '');
+}
+
+const BUSY_BUTTONS = ['btnApply','btnRestoreHero','btnRestoreCard','btnRandomizeAll','btnRestoreAll'];
+function setBusy(busy, label) {
+  opBusy = busy;
+  for (const id of BUSY_BUTTONS) {
+    const el = document.getElementById(id);
+    if (el) el.disabled = busy;
+  }
+  const apply = document.getElementById('btnApply');
+  if (apply) {
+    if (busy) {
+      if (!apply.dataset.label) apply.dataset.label = apply.innerHTML;
+      apply.textContent = label || 'Applying…';
+    } else if (apply.dataset.label) {
+      apply.innerHTML = apply.dataset.label;
+      delete apply.dataset.label;
+    }
+  }
+}
+
+// Runs one privileged batch (single admin prompt) and records PER-INTERFACE
+// results — applied / failed / skipped — instead of an all-or-nothing story.
+// Returns {applied:[ui], failed:[desc], skipped:[ui]}.
+// Main-process contract: result objects are {iface, requested, actual, ok, error?}.
+async function applyBatchToOs(planned, action, vendorFn) {
+  try {
+    const { results } = await window.macApi.changeMacBatch(
+      planned.map(p => ({ iface: p.os, newMac: p.mac }))
+    );
+    const byIface = Object.fromEntries((results || []).map(r => [r.iface, r]));
+    const applied = [], failed = [];
+    for (const p of planned) {
+      const r = byIface[p.os];
+      if (r && r.ok) {
+        const old = currentMACs[p.ui];
+        const actual = (r.actual || p.mac).toUpperCase();
+        currentMACs[p.ui] = actual;
+        addHistory(p.ui, old || '—', actual, vendorFn(p, actual), action);
+        const last = document.getElementById('m-last-' + p.ui);
+        if (last) last.textContent = new Date().toLocaleTimeString();
+        applied.push(p.ui);
+      } else {
+        const why = (r && r.error) ? r.error : 'no result';
+        addHistory(p.ui, currentMACs[p.ui] || '—', p.mac, vendorFn(p, p.mac), 'Failed');
+        failed.push(p.ui + ' (' + why + ')');
+      }
+    }
+    updateAllDisplays(); updateMatrixMACs();
+    return { applied, failed, skipped: [] };
+  } catch (err) {
+    if (isUserCancel(err)) {
+      // Admin prompt dismissed: nothing was applied. Record the skip per
+      // interface and let the caller keep its schedule running.
+      for (const p of planned) addHistory(p.ui, currentMACs[p.ui] || '—', p.mac, vendorFn(p, p.mac), 'Skipped');
+      updateAllDisplays(); updateMatrixMACs();
+      return { applied: [], failed: [], skipped: planned.map(p => p.ui) };
+    }
+    for (const p of planned) addHistory(p.ui, currentMACs[p.ui] || '—', p.mac, vendorFn(p, p.mac), 'Failed');
+    updateAllDisplays(); updateMatrixMACs();
+    return { applied: [], failed: [err.message || 'batch failed'], skipped: [] };
+  }
+}
+
+function batchToast(summary, verbPast, total) {
+  if (summary.skipped.length) {
+    showToast('Cancelled — no changes were applied.', '');
+  } else if (summary.failed.length) {
+    showToast(verbPast + ' ' + summary.applied.length + '/' + total + ' — failed: ' + summary.failed.join('; '), 'error');
+  } else {
+    showToast(verbPast + ' ' + summary.applied.length + ' interface(s)!', 'success');
+  }
+}
+
 // ── Apply MAC ──
 async function applyMAC() {
+  if (opBusy) { showToast('An operation is already in progress', 'error'); return; }
   const macInput = document.getElementById('macInput');
   const mac = macInput.value.toUpperCase();
   if (!validateMACInput(macInput)) { showToast('Invalid MAC format. Use XX:XX:XX:XX:XX:XX','error'); return; }
   const targetOS = ifaceMap[selectedIface]||'en0';
-  if (settings.confirmApply) {
-    const ok = await macApi.confirm({
+  if (settings.confirmApply && window.macApi) {
+    const ok = await window.macApi.confirm({
       title: 'Apply MAC Address',
       message: `Apply MAC ${mac} to ${selectedIface} (${targetOS})?`,
       detail: 'This runs a privileged system command (ifconfig) and prompts for your password once.',
@@ -1225,21 +1523,29 @@ async function applyMAC() {
     });
     if (!ok) return;
   }
-  if (window.macApi && window.macApi.changeMac) {
-    try {
-      const r = await window.macApi.changeMac(targetOS, mac);
-      if (!r||!r.ok) throw new Error(r?.output||'Unknown error');
-    } catch(err) { showToast('OS-level change failed. Ensure sudo is configured.','error'); return; }
+  if (!(window.macApi && window.macApi.changeMac)) { showToast('Apply requires the Electron app', 'error'); return; }
+  setBusy(true);
+  try {
+    const r = await window.macApi.changeMac(targetOS, mac);
+    if (!r || !r.ok) throw new Error((r && r.output) || 'Unknown error');
+    const applied = (r.output || mac).toUpperCase(); // verified read-back, not the request
+    const old = currentMACs[selectedIface];
+    currentMACs[selectedIface] = applied;
+    addHistory(selectedIface, old || '—', applied, vendorNameFor(applied), 'Applied');
+    updateAllDisplays(); updateMatrixMACs();
+    const last = document.getElementById('m-last-'+selectedIface);
+    if (last) last.textContent = new Date().toLocaleTimeString();
+    showToast('MAC address applied to '+selectedIface+'!','success');
+  } catch(err) {
+    if (isUserCancel(err)) showToast('Change cancelled — no changes were applied.', '');
+    else showToast('Change failed: ' + (err.message || 'unknown error'), 'error');
+  } finally {
+    setBusy(false);
   }
-  const old = currentMACs[selectedIface];
-  currentMACs[selectedIface] = mac;
-  addHistory(selectedIface, old, mac, getVendorName(mac), 'Applied');
-  updateAllDisplays(); updateMatrixMACs();
-  document.getElementById('m-last-'+selectedIface).textContent = new Date().toLocaleTimeString();
-  showToast('MAC address applied to '+selectedIface+'!','success');
 }
 
 async function restoreOriginal() {
+  if (opBusy) { showToast('An operation is already in progress', 'error'); return; }
   const targetOS = ifaceMap[selectedIface];
   const orig = (originalMACs[selectedIface] || '').toUpperCase();
   if (!targetOS || !/^([0-9A-F]{2}:){5}[0-9A-F]{2}$/.test(orig)) {
@@ -1255,31 +1561,47 @@ async function restoreOriginal() {
     });
     if (!ok) return;
   }
-  if (window.macApi && window.macApi.changeMac) {
-    try {
-      await window.macApi.changeMac(targetOS, orig);
-      const old = currentMACs[selectedIface];
-      currentMACs[selectedIface] = orig;
-      addHistory(selectedIface, old, orig, 'Original', 'Restored');
-      updateAllDisplays(); updateMatrixMACs();
-      showToast('Original MAC restored for ' + selectedIface, 'success');
-    } catch(err) { showToast('Restore failed: ' + err.message, 'error'); }
-  } else { showToast('Restore requires Electron runtime', 'error'); }
+  if (!(window.macApi && window.macApi.changeMac)) { showToast('Restore requires the Electron app', 'error'); return; }
+  setBusy(true, 'Restoring…');
+  try {
+    const r = await window.macApi.changeMac(targetOS, orig);
+    const restored = ((r && r.output) || orig).toUpperCase(); // verified read-back
+    const old = currentMACs[selectedIface];
+    currentMACs[selectedIface] = restored;
+    addHistory(selectedIface, old || '—', restored, 'Original', 'Restored');
+    updateAllDisplays(); updateMatrixMACs();
+    const last = document.getElementById('m-last-'+selectedIface);
+    if (last) last.textContent = new Date().toLocaleTimeString();
+    showToast('Original MAC restored for ' + selectedIface, 'success');
+  } catch(err) {
+    if (isUserCancel(err)) showToast('Restore cancelled — no changes were applied.', '');
+    else showToast('Restore failed: ' + (err.message || 'unknown error'), 'error');
+  } finally {
+    setBusy(false);
+  }
 }
 
 async function refreshMAC() {
   if (window.macApi && window.macApi.getCurrentMac) {
     try {
       const mac = await window.macApi.getCurrentMac(ifaceMap[selectedIface]);
-      if (mac) { currentMACs[selectedIface]=mac; updateAllDisplays(); updateMatrixMACs(); }
+      if (mac) {
+        currentMACs[selectedIface]=mac;
+        updateAllDisplays(); updateMatrixMACs();
+        if (Object.values(currentMACs).some(Boolean)) document.getElementById('readFailBanner').hidden = true;
+      }
       showToast('MAC refreshed from system','success');
     } catch(e) { showToast('Could not read MAC: '+e.message,'error'); }
-  } else { showToast('Refresh requires Electron runtime','error'); }
+  } else { showToast('Refresh requires the Electron app','error'); }
 }
 
 async function randomizeAll() {
+  if (opBusy) { showToast('An operation is already in progress', 'error'); return; }
+  // Bluetooth is excluded: it isn't an ifconfig interface on modern macOS, so
+  // attempting it would always fail verification.
   const planned = Object.keys(currentMACs)
-    .map(ui => ({ ui, os: ifaceMap[ui], mac: generateCompletelyRandomMAC().toUpperCase() }))
+    .filter(ui => ui !== 'Bluetooth')
+    .map(ui => ({ ui, os: ifaceMap[ui], mac: generateCompletelyRandomMAC() }))
     .filter(p => p.os);
   if (!planned.length) return;
   if (settings.confirmApply && window.macApi) {
@@ -1291,34 +1613,20 @@ async function randomizeAll() {
     });
     if (!ok) return;
   }
-  if (window.macApi && window.macApi.changeMacBatch) {
-    try {
-      const { results } = await window.macApi.changeMacBatch(
-        planned.map(p => ({ iface: p.os, newMac: p.mac }))
-      );
-      const byIface = Object.fromEntries((results || []).map(r => [r.iface, r]));
-      let okCount = 0;
-      for (const p of planned) {
-        if (byIface[p.os] && byIface[p.os].ok) {
-          const old = currentMACs[p.ui];
-          currentMACs[p.ui] = p.mac;
-          addHistory(p.ui, old, p.mac, getVendorName(p.mac), 'Applied');
-          document.getElementById('m-last-' + p.ui).textContent = new Date().toLocaleTimeString();
-          okCount++;
-        }
-      }
-      const failed = planned.length - okCount;
-      updateAllDisplays(); updateMatrixMACs();
-      showToast(
-        failed ? `Randomized ${okCount}/${planned.length} — ${failed} failed` : 'All interfaces randomized!',
-        failed ? 'error' : 'success'
-      );
-    } catch(err) { showToast('Randomize failed: ' + err.message, 'error'); }
-  } else { showToast('Randomize requires Electron runtime', 'error'); }
+  if (!(window.macApi && window.macApi.changeMacBatch)) { showToast('Randomize requires the Electron app', 'error'); return; }
+  setBusy(true, 'Randomizing…');
+  try {
+    const summary = await applyBatchToOs(planned, 'Applied', (p, actual) => getVendorName(actual));
+    batchToast(summary, 'Randomized', planned.length);
+  } finally {
+    setBusy(false);
+  }
 }
 
 async function restoreAll() {
+  if (opBusy) { showToast('An operation is already in progress', 'error'); return; }
   const planned = Object.keys(originalMACs)
+    .filter(ui => ui !== 'Bluetooth')
     .map(ui => ({ ui, os: ifaceMap[ui], mac: (originalMACs[ui] || '').toUpperCase() }))
     .filter(p => p.os && /^([0-9A-F]{2}:){5}[0-9A-F]{2}$/.test(p.mac));
   if (!planned.length) { showToast('No original MACs recorded', 'error'); return; }
@@ -1331,29 +1639,14 @@ async function restoreAll() {
     });
     if (!ok) return;
   }
-  if (window.macApi && window.macApi.changeMacBatch) {
-    try {
-      const { results } = await window.macApi.changeMacBatch(
-        planned.map(p => ({ iface: p.os, newMac: p.mac }))
-      );
-      const byIface = Object.fromEntries((results || []).map(r => [r.iface, r]));
-      let okCount = 0;
-      for (const p of planned) {
-        if (byIface[p.os] && byIface[p.os].ok) {
-          const old = currentMACs[p.ui];
-          currentMACs[p.ui] = p.mac;
-          addHistory(p.ui, old, p.mac, 'Original', 'Restored');
-          okCount++;
-        }
-      }
-      const failed = planned.length - okCount;
-      updateAllDisplays(); updateMatrixMACs();
-      showToast(
-        failed ? `Restored ${okCount}/${planned.length} — ${failed} failed` : 'All interfaces restored to original',
-        failed ? 'error' : 'success'
-      );
-    } catch(err) { showToast('Restore failed: ' + err.message, 'error'); }
-  } else { showToast('Restore requires Electron runtime', 'error'); }
+  if (!(window.macApi && window.macApi.changeMacBatch)) { showToast('Restore requires the Electron app', 'error'); return; }
+  setBusy(true, 'Restoring…');
+  try {
+    const summary = await applyBatchToOs(planned, 'Restored', () => 'Original');
+    batchToast(summary, 'Restored', planned.length);
+  } finally {
+    setBusy(false);
+  }
 }
 
 function cloneMAC() {
@@ -1366,6 +1659,11 @@ function cloneMAC() {
 function closeCloneModal() {
   document.getElementById('cloneModalOverlay').classList.add('hidden');
 }
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && !document.getElementById('cloneModalOverlay').classList.contains('hidden')) {
+    closeCloneModal();
+  }
+});
 function confirmCloneMAC() {
   const input = document.getElementById('cloneInput');
   const mac = input.value.trim().toUpperCase().replace(/-/g,':');
@@ -1395,38 +1693,69 @@ async function testConnection() {
 }
 
 // ── Timer ──
+// Each tick performs REAL privileged MAC changes via macApi.changeMacBatch
+// (one admin prompt per tick). The timer only starts when the user has opted in
+// via the "Apply real changes on each rotation" toggle. Dismissing a prompt
+// records a "skipped" tick and the schedule keeps running.
 let timerCountdown = 0;
 let timerCountdownHandle = null;
 
-function toggleTimer() {
-  const sel = document.getElementById('timerIntervalSel');
-  const mins = parseInt(sel.value);
-  if (!timerActive) {
-    if (mins===0) { showToast('Select a timer interval first','error'); return; }
-    timerActive = true;
-    document.getElementById('timerToggleBtn').innerHTML = '<svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg> Stop Timer';
-    document.getElementById('timerStatusText').textContent = 'Active — every '+mins+'m';
-    document.getElementById('timerDot').classList.add('on');
-    document.getElementById('timerChipText').textContent = 'Timer: every '+mins+'m';
-    document.getElementById('timerRingLbl').textContent = 'ON';
-    timerHandle = setInterval(autoRandomize, mins*60*1000);
-    timerCountdown = mins*60;
-    startCountdownRing(mins*60);
-    updateNextChange(mins);
-    showToast('Timer started – MAC will rotate every '+mins+' min','success');
-  } else {
-    timerActive = false;
-    clearInterval(timerHandle); timerHandle=null;
-    clearInterval(timerCountdownHandle); timerCountdownHandle=null;
-    document.getElementById('timerToggleBtn').innerHTML = '<svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;"><polygon points="5 3 19 12 5 21 5 3"/></svg> Start Timer';
-    document.getElementById('timerStatusText').textContent = 'Inactive';
-    document.getElementById('nextChangeText').textContent = 'N/A';
-    document.getElementById('timerDot').classList.remove('on');
-    document.getElementById('timerChipText').textContent = 'Timer inactive';
-    document.getElementById('timerRingLbl').textContent = 'OFF';
-    setRingProgress(0);
-    showToast('Timer stopped','success');
+function toggleTimerApply(btn) {
+  timerAutoApply = !timerAutoApply;
+  setToggle(btn, timerAutoApply);
+  try { localStorage.setItem('macaddy-timer-apply', timerAutoApply ? '1' : '0'); } catch(e) {}
+  if (!timerAutoApply && timerActive) {
+    stopTimer();
+    showToast('Auto-apply disabled — timer stopped', '');
   }
+}
+
+function toggleTimer() {
+  if (timerActive) { stopTimer(); return; }
+  const mins = parseInt(document.getElementById('timerIntervalSel').value, 10);
+  if (!mins) { showToast('Select a timer interval first', 'error'); return; }
+  if (!(window.macApi && window.macApi.changeMacBatch)) { showToast('The timer requires the Electron app', 'error'); return; }
+  if (!timerAutoApply) {
+    // Explicit opt-in gate with honest copy — the timer never pretends to work.
+    window.macApi.confirm({
+      title: 'Enable automatic MAC changes?',
+      message: 'The timer will rotate your real MAC addresses on schedule.',
+      detail: 'Each rotation runs a privileged system command and macOS will show an administrator password prompt. If you dismiss a prompt, that rotation is skipped and the schedule keeps running.',
+      confirmLabel: 'Enable & Start', cancelLabel: 'Cancel'
+    }).then(ok => {
+      if (ok) { toggleTimerApply(document.getElementById('tog-timer-apply')); startTimer(mins); }
+    });
+    return;
+  }
+  startTimer(mins);
+}
+
+function startTimer(mins) {
+  timerActive = true;
+  document.getElementById('timerToggleBtn').innerHTML = '<svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg> Stop Timer';
+  document.getElementById('timerStatusText').textContent = 'Active — every '+mins+'m';
+  document.getElementById('timerDot').classList.add('on');
+  document.getElementById('timerChipText').textContent = 'Timer: every '+mins+'m';
+  document.getElementById('timerRingLbl').textContent = 'ON';
+  timerHandle = setInterval(autoRandomize, mins*60*1000);
+  timerCountdown = mins*60;
+  startCountdownRing(mins*60);
+  updateNextChange(mins);
+  showToast('Timer started – real MAC rotation every '+mins+' min','success');
+}
+
+function stopTimer() {
+  timerActive = false;
+  clearInterval(timerHandle); timerHandle=null;
+  clearInterval(timerCountdownHandle); timerCountdownHandle=null;
+  document.getElementById('timerToggleBtn').innerHTML = '<svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;"><polygon points="5 3 19 12 5 21 5 3"/></svg> Start Timer';
+  document.getElementById('timerStatusText').textContent = 'Inactive';
+  document.getElementById('nextChangeText').textContent = 'N/A';
+  document.getElementById('timerDot').classList.remove('on');
+  document.getElementById('timerChipText').textContent = 'Timer inactive';
+  document.getElementById('timerRingLbl').textContent = 'OFF';
+  setRingProgress(0);
+  showToast('Timer stopped','success');
 }
 
 function startCountdownRing(totalSecs) {
@@ -1450,28 +1779,57 @@ function updateNextChange(mins) {
   const d = new Date(); d.setMinutes(d.getMinutes()+mins);
   document.getElementById('nextChangeText').textContent = d.toLocaleTimeString();
 }
+
+// Interval changes update the LIVE schedule, not just the label.
 function updateTimerPreview() {
-  const mins = parseInt(document.getElementById('timerIntervalSel').value);
-  if (timerActive && mins) updateNextChange(mins);
-}
-function autoRandomize() {
-  const vendor = document.getElementById('autoVendorSel').value;
-  Object.keys(autoIfaceInclude).forEach(ui => {
-    if (!autoIfaceInclude[ui]) return;
-    const prefix = vendor==='random' ? '' : (vendorPrefixes[vendor]||'');
-    const mac = prefix ? prefix+':'+randSuffix() : generateCompletelyRandomMAC();
-    const old = currentMACs[ui];
-    currentMACs[ui] = mac;
-    addHistory(ui, old, mac, getVendorName(mac),'Auto');
-    document.getElementById('m-last-'+ui).textContent = new Date().toLocaleTimeString();
-  });
-  updateAllDisplays(); updateMatrixMACs();
-  const mins = parseInt(document.getElementById('timerIntervalSel').value);
+  const mins = parseInt(document.getElementById('timerIntervalSel').value, 10);
+  if (!timerActive) {
+    if (mins > 0) updateNextChange(mins);
+    else document.getElementById('nextChangeText').textContent = 'N/A';
+    return;
+  }
+  if (!mins) { stopTimer(); return; }
+  clearInterval(timerHandle);
+  timerHandle = setInterval(autoRandomize, mins*60*1000);
+  timerCountdown = mins*60;
+  startCountdownRing(mins*60);
   updateNextChange(mins);
+  document.getElementById('timerStatusText').textContent = 'Active — every '+mins+'m';
+  document.getElementById('timerChipText').textContent = 'Timer: every '+mins+'m';
+  showToast('Timer updated — next rotation in '+mins+' min','success');
 }
+
+async function autoRandomize() {
+  // A privileged op already in flight (manual apply or overlapping tick):
+  // skip this tick silently and keep the schedule running.
+  if (opBusy) return;
+  const vendor = VENDORS.find(v => v.key === document.getElementById('autoVendorSel').value) || VENDORS[0];
+  const planned = Object.keys(autoIfaceInclude)
+    .filter(ui => autoIfaceInclude[ui] && ui !== 'Bluetooth' && ifaceMap[ui])
+    .map(ui => ({ ui, os: ifaceMap[ui], mac: vendor.prefix ? vendor.prefix + ':' + randSuffix() : generateCompletelyRandomMAC() }));
+  if (!planned.length) { showToast('Timer tick: no interfaces included', 'error'); return; }
+  setBusy(true, 'Rotating…');
+  try {
+    const summary = await applyBatchToOs(planned, 'Auto', (p, actual) => getVendorName(actual));
+    if (summary.skipped.length) {
+      showToast('Timer tick skipped — admin prompt dismissed. Schedule continues.', '');
+    } else if (summary.failed.length) {
+      showToast('Timer tick: ' + summary.applied.length + '/' + planned.length + ' rotated — ' + summary.failed.join('; '), 'error');
+    } else {
+      showToast('Timer tick: rotated ' + summary.applied.length + ' interface(s)', 'success');
+    }
+  } finally {
+    setBusy(false);
+    const mins = parseInt(document.getElementById('timerIntervalSel').value, 10);
+    if (mins > 0) updateNextChange(mins);
+  }
+}
+
 function toggleIfaceInclude(btn, ui) {
-  btn.classList.toggle('on');
-  autoIfaceInclude[ui] = btn.classList.contains('on');
+  if (btn.disabled) return;
+  const on = !btn.classList.contains('on');
+  setToggle(btn, on);
+  autoIfaceInclude[ui] = on;
 }
 
 // ── History ──
@@ -1481,17 +1839,23 @@ function addHistory(ui, oldMAC, newMAC, vendor, status) {
     ts: new Date().toLocaleString('en-US',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}),
     ui, oldMAC, newMAC, vendor, status
   });
+  if (changeHistory.length > HISTORY_CAP) changeHistory.length = HISTORY_CAP; // drop oldest
   renderHistory();
 }
+const HIST_STATUS_CLASS = { Applied:'badge-success', Auto:'badge-success', Restored:'badge-warn', Skipped:'badge-warn', Failed:'badge-error' };
 function renderHistory() {
   const tbody = document.getElementById('histTableBody');
+  const note = document.getElementById('histCountNote');
   const filtered = histFilter==='all' ? changeHistory : changeHistory.filter(e => e.ui===histFilter||e.status===histFilter);
+  if (note) note.textContent = changeHistory.length
+    ? 'Showing latest ' + Math.min(50, filtered.length) + ' of ' + changeHistory.length + ' entr' + (changeHistory.length === 1 ? 'y' : 'ies')
+    : '';
   if (filtered.length===0) {
     tbody.innerHTML='<tr><td colspan="6" class="tbl-empty"><span class="tbl-empty-ico">📋</span>No entries match the current filter.</td></tr>';
     return;
   }
   tbody.innerHTML = filtered.slice(0,50).map(e => {
-    const cls = e.status==='Applied'||e.status==='Auto' ? 'badge-success' : e.status==='Restored' ? 'badge-warn' : 'badge-error';
+    const cls = HIST_STATUS_CLASS[e.status] || 'badge-error';
     return `<tr>
       <td style="padding-left:20px;white-space:nowrap;color:var(--text-sec);font-size:11px;font-family:var(--mono);">${e.ts}</td>
       <td class="lbl">${e.ui}</td>
@@ -1549,7 +1913,12 @@ function loadConfig() {
         if(c.originalMACs) Object.assign(originalMACs,c.originalMACs);
         if(c.changeHistory) changeHistory=c.changeHistory;
         if(c.ifaceMap) Object.assign(ifaceMap,c.ifaceMap);
-        if(c.settings) Object.assign(settings,c.settings);
+        if(c.settings) {
+          Object.assign(settings,c.settings);
+          setToggle(document.getElementById('tog-confirm'), !!settings.confirmApply);
+          setToggle(document.getElementById('tog-remvendor'), !!settings.rememberVendor);
+          setToggle(document.getElementById('tog-toasts'), !!settings.useToasts);
+        }
         updateAllDisplays(); updateMatrixMACs(); renderHistory();
         showToast('Configuration loaded','success');
       } catch(err) { showToast('Invalid config file','error'); }
@@ -1560,6 +1929,23 @@ function loadConfig() {
 }
 
 // ── Settings ──
+// One helper keeps toggle visuals, aria-pressed/aria-checked, and the settings
+// object in sync — no decorative toggles.
+function setToggle(btn, on) {
+  if (!btn) return;
+  btn.classList.toggle('on', on);
+  btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+  if (btn.getAttribute('role') === 'switch') btn.setAttribute('aria-checked', on ? 'true' : 'false');
+}
+function toggleSetting(btn, key) {
+  const on = !btn.classList.contains('on');
+  setToggle(btn, on);
+  settings[key] = on;
+  if (key === 'rememberVendor' && !on) {
+    vendorMemory = {};
+    try { localStorage.removeItem('macaddy-vendor-memory'); } catch(e) {}
+  }
+}
 function updateIfaceMap() {
   ifaceMap.WiFi=document.getElementById('set-wifi').value||'en0';
   ifaceMap.Ethernet=document.getElementById('set-eth').value||'en1';
@@ -1571,7 +1957,10 @@ function resetSettings() {
   document.getElementById('set-wifi').value='en0';
   document.getElementById('set-eth').value='en1';
   document.getElementById('set-bt').value='en2';
-  settings={confirmApply:true,useToasts:true};
+  settings={confirmApply:true,useToasts:true,rememberVendor:true};
+  setToggle(document.getElementById('tog-confirm'), true);
+  setToggle(document.getElementById('tog-remvendor'), true);
+  setToggle(document.getElementById('tog-toasts'), true);
   showToast('Settings reset to defaults','success');
 }
 
@@ -1666,12 +2055,7 @@ if (window.macApi) {
   window.macApi.onMenuNavigate(view => navigateTo(view));
   window.macApi.onMenuSwitchIface(iface => {
     const tab = document.querySelector(`.iface-tab[data-iface="${iface}"]`);
-    if (tab) {
-      document.querySelectorAll('.iface-tab').forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      selectedIface = iface;
-      updateAllDisplays();
-    }
+    if (tab) selectIfaceTab(iface);
   });
 }
 
@@ -1680,7 +2064,7 @@ let _toastTimer;
 function showToast(msg, type='') {
   if (!settings.useToasts) {
     if (type==='error' && window.macApi) {
-      window.macApi.confirm({ title: 'Error', message: msg, confirmLabel: 'OK', cancelLabel: '' });
+      window.macApi.confirm({ title: 'Error', message: msg, confirmLabel: 'OK', cancelLabel: 'Dismiss' });
     }
     return;
   }
