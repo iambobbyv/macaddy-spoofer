@@ -45,7 +45,7 @@ function createWindow() {
 app.whenReady().then(() => {
     app.setAboutPanelOptions({
         applicationName: 'MAC Addy Spoofer',
-        applicationVersion: app.getVersion() || '1.0.0',
+        applicationVersion: app.getVersion() || '1.1.0',
         copyright: '© 2026 Souriya "Bobby" Vongchanh. All rights reserved.',
         credits: 'Built with Electron'
     });
