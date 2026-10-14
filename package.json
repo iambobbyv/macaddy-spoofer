@@ -1,6 +1,6 @@
 {
   "name": "macaddy-spoofer",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Professional MAC Address Spoofer with automated randomization",
   "main": "main.js",
   "scripts": {
@@ -89,8 +89,8 @@
       "darkModeSupport": true,
       "extendInfo": {
         "NSHumanReadableCopyright": "Copyright \u00a9 2026 Souriya \"Bobby\" Vongchanh. All rights reserved.",
-        "CFBundleShortVersionString": "1.0.0",
-        "CFBundleVersion": "1",
+        "CFBundleShortVersionString": "1.1.0",
+        "CFBundleVersion": "2",
         "LSMinimumSystemVersion": "12.0",
         "NSAppleEventsUsageDescription": "MAC Addy Spoofer uses Apple Events to request administrator privileges when changing MAC addresses.",
         "NSAdminRequired": true
