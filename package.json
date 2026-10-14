@@ -25,7 +25,7 @@
     "security"
   ],
   "author": {
-    "name": "Souriya \"Bobby\" Vongchanh",
+    "name": "SOURI APPS LLC",
     "email": "iambobbyv@icloud.com"
   },
   "license": "MIT",
@@ -43,7 +43,7 @@
   "build": {
     "appId": "com.bobbyv.macaddy-spoofer",
     "productName": "MAC Addy Spoofer",
-    "copyright": "Copyright \u00a9 2026 Souriya \"Bobby\" Vongchanh. All rights reserved.",
+    "copyright": "Copyright \u00a9 2026 SOURI APPS LLC. All rights reserved.",
     "asar": true,
     "directories": {
       "output": "dist",
@@ -88,7 +88,7 @@
       "minimumSystemVersion": "12.0",
       "darkModeSupport": true,
       "extendInfo": {
-        "NSHumanReadableCopyright": "Copyright \u00a9 2026 Souriya \"Bobby\" Vongchanh. All rights reserved.",
+        "NSHumanReadableCopyright": "Copyright \u00a9 2026 SOURI APPS LLC. All rights reserved.",
         "CFBundleShortVersionString": "1.0.0",
         "CFBundleVersion": "1",
         "LSMinimumSystemVersion": "12.0",
