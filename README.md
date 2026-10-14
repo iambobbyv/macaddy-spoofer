@@ -14,16 +14,53 @@ Professional MAC address spoofing application with automated randomization featu
 
 ## Installation
 
-### Browser Version
-1. Open `index.html` in any modern web browser
-2. All features work client-side with no server required
+MAC Addy Spoofer is distributed **directly** — it is not on the Mac App Store
+(MAC spoofing requires administrator privileges that the App Store sandbox
+does not allow).
 
-### Electron Desktop App
+1. Download the latest `MAC Addy Spoofer-<version>-arm64.dmg` (Apple Silicon)
+   or `-x64.dmg` (Intel) from [souriapps.net](https://souriapps.net) or the
+   [GitHub releases page](https://github.com/iambobbyv/macaddy-spoofer/releases).
+2. Open the `.dmg` and drag **MAC Addy Spoofer** into Applications.
+3. Launch the app. Release builds are signed + notarized, so Gatekeeper
+   accepts them on first launch.
+   - **Unsigned / self-built copies:** right-click the app, choose **Open**,
+     then confirm — this clears the one-time Gatekeeper warning.
+4. Applying a MAC change prompts once for your administrator password (the
+   app runs a privileged `ifconfig` command through macOS authorization).
+
+### Run from source (development)
+
+```sh
 npm install
 npm start
+```
 
-### Building Executables
-npm run build
+### Building installers
+
+```sh
+npm run build            # current platform (macOS: DMG + ZIP, Linux: AppImage)
+npm run build:mac:arm64  # Apple Silicon DMG
+npm run build:mac:x64    # Intel DMG
+npm run build:mac        # both architectures
+```
+
+Unsigned CI validation builds run automatically on every PR
+(see `.github/workflows/build.yml`).
+
+## Release signing & notarization
+
+Release builds are code-signed with a **Developer ID Application**
+certificate and notarized so Gatekeeper accepts them. This requires:
+
+- Apple Developer Program membership
+- the Developer ID certificate in your login Keychain
+- a `.env` file (copy `.env.example`) with `APPLE_ID`,
+  `APPLE_APP_PASSWORD` (app-specific password), and `APPLE_TEAM_ID`
+
+Without these, `scripts/notarize.js` skips notarization automatically and
+the build stays unsigned — fine for local testing, not for distribution.
+Never commit `.env` (it is gitignored).
 
 ## Platform-Specific MAC Changing
 
