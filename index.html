@@ -1107,13 +1107,15 @@ window.addEventListener('DOMContentLoaded', async () => {
   } catch(e) {}
 
   if (window.macApi && window.macApi.getCurrentMac) {
-    for (const ui of Object.keys(ifaceMap)) {
+    // Independent reads — run in parallel (P1), results land as they arrive.
+    const reads = Object.keys(ifaceMap).map(async (ui) => {
       const os = ifaceMap[ui];
       try {
         const mac = await window.macApi.getCurrentMac(os);
         if (mac) { originalMACs[ui] = mac; currentMACs[ui] = mac; }
       } catch(e) { console.warn('MAC read failed for', os, e.message); }
-    }
+    });
+    await Promise.allSettled(reads);
   }
   updateAllDisplays();
   updateMatrixMACs();
